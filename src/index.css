@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-muted: var(--muted);
+  
+  --color-glass-surface: var(--glass-surface);
+  --color-glass-surface-hover: var(--glass-surface-hover);
+  --color-glass-border: var(--glass-border);
+  --color-glass-border-hover: var(--glass-border-hover);
+  
+  /* Aurora/Gold theme stays constant */
+  --color-aurora-cyan: #FFB800; 
+  --color-aurora-blue: #F2C94C; 
+  --color-aurora-purple: #E2A300; 
+  
+  --color-food-coral: #FFB800;
+  --color-food-orange: #E2A300;
+  --color-food-amber: #F2C94C;
+
+  /* Status Colors */
+  --color-status-success: #10B981;
+  --color-status-warning: #F59E0B;
+  --color-status-error: #EF4444;
+  --color-status-info: #3B82F6;
+
+  /* Seamless Theme Flipping for hardcoded classes */
+  --color-white: var(--theme-white);
+  --color-slate-300: var(--theme-slate-300);
+  --color-slate-400: var(--theme-slate-400);
+  --color-black: var(--theme-black);
+  
+  --animate-float: none;
+  --animate-aurora: none;
+}
+
+@layer base {
+  :root {
+    /* LIGHT THEME (Default) */
+    --bg: #FAFAFA;
+    --fg: #111111;
+    --muted: #475569;
+    --glass-surface: rgba(255, 255, 255, 0.95);
+    --glass-surface-hover: rgba(255, 255, 255, 1);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-hover: rgba(255, 184, 0, 0.5);
+
+    /* Flip semantic colors */
+    --theme-white: #111111; /* White text becomes dark */
+    --theme-slate-300: #475569;
+    --theme-slate-400: #64748b;
+    --theme-black: #ffffff; /* Black bg becomes white */
+  }
+
+  .dark {
+    /* DARK THEME */
+    --bg: #0a0a0a;
+    --fg: #f8fafc;
+    --muted: #94a3b8;
+    --glass-surface: rgba(20, 20, 20, 0.9);
+    --glass-surface-hover: rgba(30, 30, 30, 0.95);
+    --glass-border: rgba(255, 184, 0, 0.15);
+    --glass-border-hover: rgba(255, 184, 0, 0.4);
+
+    /* Original semantic colors */
+    --theme-white: #ffffff;
+    --theme-slate-300: #cbd5e1;
+    --theme-slate-400: #94a3b8;
+    --theme-black: #000000;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans transition-colors duration-500;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-normal;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-[var(--color-glass-surface)] backdrop-blur-md border border-[var(--color-glass-border)];
+  }
+  
+  .glass-hover {
+    @apply hover:bg-[var(--color-glass-surface-hover)] hover:border-[var(--color-glass-border-hover)] transition-all duration-300;
+  }
+
+  .aurora-bg {
+    background: linear-gradient(
+      -45deg,
+      rgba(255, 184, 0, 0.05),
+      rgba(242, 201, 76, 0.05),
+      rgba(226, 163, 0, 0.05)
+    );
+    background-size: 100% 100%;
+  }
+
+  .aurora-text {
+    @apply bg-gradient-to-r from-aurora-cyan via-aurora-blue to-aurora-purple bg-clip-text text-transparent;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(255, 184, 0, 0.15);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(226, 163, 0, 0.15);
+  }
+
+  .glow-food {
+    box-shadow: 0 0 20px rgba(242, 201, 76, 0.15);
+  }
+
+  .hover-elevation {
+    @apply transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-aurora-cyan/10;
+  }
+
+  .image-zoom-container {
+    @apply overflow-hidden rounded-2xl relative;
+  }
+  
+  .image-zoom {
+    @apply w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105;
+  }
+}
