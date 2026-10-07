@@ -97,7 +97,7 @@ export const restaurants: Restaurant[] = [
       { 
         id: 102, category: 'Recommended', name: 'Truffle Mushroom Risotto', price: 32.50, rating: 4.9, 
         description: 'Creamy Arborio rice slow-cooked with white wine and porcini.', 
-        vegetarian: true, image: 'https://images.unsplash.com/photo-1476124369491-e73f50715200?q=80&w=1000&auto=format&fit=crop',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?q=80&w=1000&auto=format&fit=crop',
         ingredients: ['Arborio Rice', 'Porcini Mushrooms', 'Parmesan', 'White Wine', 'Truffle Oil'],
         allergens: ['Dairy'],
         customizations: [

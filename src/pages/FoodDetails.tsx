@@ -114,6 +114,10 @@ export default function FoodDetails() {
               src={food.image} 
               alt={food.name} 
               className="w-full h-full object-cover image-zoom"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop';
+              }}
             />
             
             <div className="absolute top-6 left-6 flex flex-col gap-3 z-10">

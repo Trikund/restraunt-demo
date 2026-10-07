@@ -34,6 +34,10 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
             alt={restaurant.name} 
             className="image-zoom"
             loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop';
+            }}
           />
           
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">

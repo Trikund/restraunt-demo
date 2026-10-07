@@ -29,7 +29,7 @@ export default function Home() {
         {/* Full Image Background */}
         <div className="absolute inset-0 z-0 bg-background transition-colors duration-500">
           <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2000&auto=format&fit=crop" alt="Hero Steak" className="w-full h-full object-cover opacity-40 object-right hidden dark:block" />
-          <img src="https://images.unsplash.com/photo-1490818387583-1b5ba4597d26?q=80&w=2000&auto=format&fit=crop" alt="Hero Salad" className="w-full h-full object-cover opacity-30 object-right dark:hidden" />
+          <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2000&auto=format&fit=crop" alt="Hero Salad" className="w-full h-full object-cover opacity-30 object-right dark:hidden" />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 md:via-background/70 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>

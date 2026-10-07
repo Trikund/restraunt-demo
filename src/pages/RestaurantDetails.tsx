@@ -58,6 +58,10 @@ export default function RestaurantDetails() {
           src={restaurant.image} 
           alt={restaurant.name} 
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop';
+          }}
         />
         
         <div className="absolute top-24 left-4 lg:left-8 z-20">

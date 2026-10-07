@@ -90,7 +90,15 @@ export default function Cart() {
                     return (
                       <div key={item.id} className="flex gap-4">
                         <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 shadow-lg">
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          <img 
+                            src={item.image} 
+                            alt={item.name} 
+                            className="w-full h-full object-cover" 
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop';
+                            }}
+                          />
                         </div>
                         
                         <div className="flex-1 flex flex-col min-w-0">

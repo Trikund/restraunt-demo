@@ -21,6 +21,10 @@ export default function DishCard({ dish }: DishProps) {
           src={dish.image} 
           alt={dish.name} 
           className="image-zoom"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop';
+          }}
         />
         <button className="absolute top-1.5 left-1.5 z-10 p-1.5 rounded-full bg-background/50 backdrop-blur-md text-white hover:text-food-coral hover:bg-white/20 transition-colors">
           <Heart size={12} />

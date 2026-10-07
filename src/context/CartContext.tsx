@@ -30,7 +30,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
     const saved = localStorage.getItem('aurora_cart');
-    return saved ? JSON.parse(saved) : [];
+    if (!saved) return [];
+    try {
+      const parsed: CartItem[] = JSON.parse(saved);
+      return parsed.map(item => {
+        if (!item.image || item.image.includes('photo-1476124369491-e73f50715200')) {
+          return {
+            ...item,
+            image: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?q=80&w=1000&auto=format&fit=crop'
+          };
+        }
+        return item;
+      });
+    } catch {
+      return [];
+    }
   });
   
   const [isCartOpen, setIsCartOpen] = useState(false);

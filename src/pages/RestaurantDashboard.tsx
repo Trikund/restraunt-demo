@@ -24,7 +24,7 @@ export default function RestaurantDashboard() {
   const generateMockOrder = () => {
     const mockNames = ['Alex Johnson', 'Sarah Smith', 'Michael Chen', 'Emma Davis'];
     const mockItems = [
-      { id: 1, name: "Truffle Pasta", price: 24.99, quantity: 1, image: "https://images.unsplash.com/photo-1476124369491-e73f50715200?q=80&w=1000&auto=format&fit=crop" },
+      { id: 1, name: "Truffle Pasta", price: 24.99, quantity: 1, image: "https://images.unsplash.com/photo-1546549032-9571cd6b27df?q=80&w=1000&auto=format&fit=crop" },
       { id: 2, name: "Spicy Tuna Roll", price: 18.50, quantity: 2, image: "https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=1000&auto=format&fit=crop" },
       { id: 3, name: "Wagyu Burger", price: 32.00, quantity: 1, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000&auto=format&fit=crop" }
     ];

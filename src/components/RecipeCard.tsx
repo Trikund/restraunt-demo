@@ -28,6 +28,10 @@ export default function RecipeCard({ recipe }: RecipeProps) {
             src={recipe.image} 
             alt={recipe.name} 
             className="image-zoom brightness-75 group-hover:brightness-50 transition-all duration-500"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
         </div>
