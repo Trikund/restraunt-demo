@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SlidersHorizontal, MapPin, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from '../components/SearchBar';
@@ -48,12 +48,13 @@ export default function Restaurants() {
           setCurrentLocation(city);
           setDetectedCity(city);
           
-          // Dynamically adapt mock restaurants to the user's real city to simulate all-India backend
+          // Dynamically adapt mock restaurants to the user's real city to simulate local backend
           const adapted: Restaurant[] = restaurants.map((restaurant) => {
-            // Generate a random distance between 0.5 and 4.0 km (some will fail the 3km filter to prove it works)
             const randomDistance = (Math.random() * 3.5 + 0.5).toFixed(1);
             return {
               ...restaurant,
+              // Update name to reflect city automatically!
+              name: `${restaurant.name} ${city}`,
               city: city,
               distanceKm: parseFloat(randomDistance),
               location: `${restaurant.location.split(',')[0]}, ${city}`
@@ -73,6 +74,15 @@ export default function Restaurants() {
       }
     );
   };
+
+  // Automatically detect location when page loads!
+  React.useEffect(() => {
+    // Only detect if it's the initial state
+    if (currentLocation === 'Current Location' && !isDetecting) {
+      handleDetectLocation();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredRestaurants = useMemo(() => {
     let result = localizedRestaurants.filter(restaurant => {
