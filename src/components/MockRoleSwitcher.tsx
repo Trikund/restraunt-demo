@@ -21,18 +21,20 @@ export default function MockRoleSwitcher() {
   ];
 
   return (
-    <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 items-center gap-1">
+    <div className="flex bg-slate-200/50 dark:bg-white/5 p-1 rounded-xl border border-slate-300 dark:border-white/10 items-center gap-1">
       {roles.map(({ role, label, icon: Icon, activeClass }) => (
         <button
           key={role}
           onClick={() => handleRoleChange(role)}
           title={`Switch to ${label}`}
           className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
-            currentUser.role === role ? activeClass : 'text-slate-400 hover:text-white hover:bg-white/5'
+            currentUser.role === role 
+              ? activeClass 
+              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-white/5'
           }`}
         >
-          <Icon size={13} />
-          {label}
+          <Icon size={14} />
+          <span className="hidden 2xl:inline">{label}</span>
         </button>
       ))}
     </div>

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, ChefHat, Sun, Moon, Menu, X, Home, UtensilsCrossed, Store, Tag, CalendarDays, Info, Phone } from 'lucide-react';
+import { ShoppingBag, Search, Sun, Moon, Menu, X, Home, UtensilsCrossed, Store, Tag, CalendarDays, Info, Phone } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 import SearchModal from './SearchModal';
 import MockRoleSwitcher from './MockRoleSwitcher';
-import { useScroll } from '../hooks/useScroll';
-import { useCart } from '../context/CartContext';
 
 const navLinks = [
   { name: 'Home', path: '/', icon: Home },
@@ -17,54 +16,49 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const { scrolled } = useScroll(20);
-  const { totalQuantity, openCart } = useCart();
-  const location = useLocation();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  const location = useLocation();
+  const { totalQuantity, openCart } = useCart();
 
-  // Close mobile menu on route change
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleTheme = () => {
+    const isDarkMode = document.documentElement.classList.toggle('dark');
+    setIsDark(isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  };
+
   useEffect(() => {
     setIsMobileOpen(false);
   }, [location.pathname]);
 
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = isMobileOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isMobileOpen]);
-
-  const toggleTheme = () => {
-    if (isDark) {
-      document.documentElement.classList.remove('dark');
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      setIsDark(true);
-    }
-  };
-
-  const glassStyle = scrolled
-    ? 'bg-[#0d1117]/90 backdrop-blur-xl border-white/8 shadow-2xl shadow-black/30'
-    : 'bg-transparent border-transparent';
-
   return (
     <>
-      <header className={`fixed top-0 w-full z-50 border-b transition-all duration-500 ${glassStyle}`}>
-        <div className="container mx-auto px-4 lg:px-8 h-18 flex items-center justify-between" style={{ height: '72px' }}>
-
-          {/* ── Logo ─────────────────────────────────────────────────── */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl bg-aurora-cyan/10 border border-aurora-cyan/30 flex items-center justify-center group-hover:bg-aurora-cyan/20 transition-colors">
-              <ChefHat className="text-aurora-cyan" size={20} />
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 shadow-sm' 
+          : 'bg-transparent'
+      }`}>
+        <div className="container mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
+          
+          {/* 🍽️ Logo */}
+          <Link to="/" className="flex items-center gap-2 group shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-aurora-cyan/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <UtensilsCrossed className="text-aurora-cyan" size={24} />
             </div>
-            <span className="text-xl font-extrabold text-white tracking-tight">
+            <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Aurora<span className="text-aurora-cyan">Food</span>
             </span>
           </Link>
 
-          {/* ── Desktop Nav ───────────────────────────────────────────── */}
+          {/* 🖥️ Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
@@ -72,10 +66,10 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     isActive
-                      ? 'text-aurora-cyan bg-aurora-cyan/8'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'text-aurora-cyan bg-aurora-cyan/10'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
                   }`}
                 >
                   {link.name}
@@ -87,20 +81,20 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* ── Right Actions ─────────────────────────────────────────── */}
-          <div className="flex items-center gap-2">
-            {/* Role Switcher — only on large screens */}
-            <div className="hidden xl:block">
+          {/* ⚡ Right Actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Role Switcher */}
+            <div className="hidden lg:block">
               <MockRoleSwitcher />
             </div>
 
             {/* Divider */}
-            <div className="hidden xl:block w-px h-6 bg-white/10 mx-1" />
+            <div className="hidden lg:block w-px h-6 bg-slate-200 dark:bg-white/10 mx-1" />
 
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition-all"
+              className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-all"
               title="Toggle Theme"
             >
               {isDark ? <Sun size={16} /> : <Moon size={16} />}
@@ -108,7 +102,7 @@ export default function Navbar() {
 
             {/* Search */}
             <button
-              className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition-all"
+              className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-all"
               onClick={() => setIsSearchOpen(true)}
               title="Search"
             >
@@ -117,7 +111,7 @@ export default function Navbar() {
 
             {/* Cart */}
             <button
-              className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition-all relative"
+              className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-all relative"
               onClick={openCart}
               title="Cart"
             >
@@ -129,25 +123,25 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Auth buttons — desktop */}
-            <div className="hidden lg:flex items-center gap-2 ml-1 pl-3 border-l border-white/10">
+            {/* Auth buttons */}
+            <div className="hidden lg:flex items-center gap-2 ml-1 pl-3 border-l border-slate-200 dark:border-white/10">
               <Link
                 to="/login"
-                className="px-4 py-2 rounded-lg border border-white/15 text-slate-300 font-medium hover:bg-white/5 hover:text-white hover:border-white/30 transition-all text-sm"
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-white/15 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-sm whitespace-nowrap"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="px-4 py-2 rounded-lg bg-aurora-cyan text-[#111111] font-bold hover:bg-aurora-blue hover:text-white transition-all text-sm shadow-lg shadow-aurora-cyan/20"
+                className="px-4 py-2 rounded-lg bg-aurora-cyan text-[#111111] font-bold hover:bg-aurora-cyan/90 transition-all text-sm shadow-lg shadow-aurora-cyan/20 whitespace-nowrap"
               >
                 Sign Up
               </Link>
             </div>
 
-            {/* Hamburger — mobile/tablet */}
+            {/* Hamburger */}
             <button
-              className="xl:hidden w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-all ml-1"
+              className="xl:hidden w-9 h-9 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all ml-1"
               onClick={() => setIsMobileOpen(v => !v)}
               aria-label="Toggle menu"
             >
@@ -157,24 +151,24 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* ── Mobile Menu Overlay ─────────────────────────────────────────── */}
+      {/* 📱 Mobile Menu Overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm xl:hidden"
+          className="fixed inset-0 z-40 bg-black/40 dark:bg-black/60 backdrop-blur-sm xl:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      {/* ── Mobile Drawer ───────────────────────────────────────────────── */}
-      <div className={`fixed top-0 right-0 h-full w-72 z-50 bg-[#0d1117] border-l border-white/10 shadow-2xl transform transition-transform duration-300 ease-in-out xl:hidden ${isMobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* 📱 Mobile Drawer */}
+      <div className={`fixed top-0 right-0 h-full w-72 z-50 bg-white dark:bg-[#0d1117] border-l border-slate-200 dark:border-white/10 shadow-2xl transform transition-transform duration-300 ease-in-out xl:hidden ${isMobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex flex-col h-full">
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-5 py-5 border-b border-white/8">
-            <span className="text-white font-extrabold text-lg">
+          <div className="flex items-center justify-between px-5 py-5 border-b border-slate-100 dark:border-white/8">
+            <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Aurora<span className="text-aurora-cyan">Food</span>
             </span>
             <button
-              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white"
+              className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               onClick={() => setIsMobileOpen(false)}
             >
               <X size={16} />
@@ -193,7 +187,7 @@ export default function Navbar() {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
                     isActive
                       ? 'bg-aurora-cyan/10 text-aurora-cyan border border-aurora-cyan/20'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
                   }`}
                 >
                   <Icon size={18} />
@@ -204,17 +198,17 @@ export default function Navbar() {
           </nav>
 
           {/* Role Switcher in mobile */}
-          <div className="px-4 py-4 border-t border-white/8">
+          <div className="px-4 py-4 border-t border-slate-100 dark:border-white/8">
             <p className="text-xs text-slate-500 font-semibold uppercase tracking-widest mb-3">Switch Role (Demo)</p>
             <MockRoleSwitcher />
           </div>
 
           {/* Auth buttons in mobile */}
           <div className="px-4 pb-6 grid grid-cols-2 gap-3">
-            <Link to="/login" className="text-center py-2.5 rounded-xl border border-white/15 text-white font-bold text-sm hover:bg-white/5 transition-all">
+            <Link to="/login" className="text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/15 text-slate-800 dark:text-white font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
               Login
             </Link>
-            <Link to="/signup" className="text-center py-2.5 rounded-xl bg-aurora-cyan text-[#111111] font-bold text-sm hover:bg-aurora-blue hover:text-white transition-all">
+            <Link to="/signup" className="text-center py-2.5 rounded-xl bg-aurora-cyan text-[#111111] font-bold text-sm hover:bg-aurora-cyan/90 transition-all">
               Sign Up
             </Link>
           </div>
