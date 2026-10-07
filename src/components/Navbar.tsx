@@ -24,6 +24,10 @@ export default function Navbar() {
   const { totalQuantity, openCart } = useCart();
 
   useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -32,7 +36,7 @@ export default function Navbar() {
   const toggleTheme = () => {
     const isDarkMode = document.documentElement.classList.toggle('dark');
     setIsDark(isDarkMode);
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    localStorage.setItem('aurora_theme', isDarkMode ? 'dark' : 'light');
   };
 
   useEffect(() => {
