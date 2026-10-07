@@ -27,7 +27,7 @@ export default function MenuItemCard({ item }: MenuItemProps) {
         className="p-3 flex flex-col gap-3 bg-background/50 border-white/5 relative group overflow-hidden h-full transition-all duration-300 hover:bg-white/10 hover:shadow-xl hover:border-aurora-cyan/30"
       >
         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden image-zoom-container shadow-md relative">
-          <img src={item.image} alt={item.name} className="image-zoom" />
+          <img src={item.image} alt={item.name} className="image-zoom" loading="lazy" />
           
           <button 
             className={`absolute top-2 right-2 z-10 p-2 rounded-full transition-all ${

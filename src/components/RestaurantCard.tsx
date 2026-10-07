@@ -33,6 +33,7 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
             src={restaurant.image} 
             alt={restaurant.name} 
             className="image-zoom"
+            loading="lazy"
           />
           
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">

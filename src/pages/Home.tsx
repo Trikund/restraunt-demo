@@ -44,7 +44,7 @@ export default function Home() {
             <span className="inline-block py-1 px-3 border-l-2 border-aurora-cyan text-aurora-cyan font-semibold text-sm mb-6 uppercase tracking-widest">
               GOOD FOOD • GOOD MOOD
             </span>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.1]">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-[1.15]">
               Delicious Food<br />
               Brings People<br />
               <span className="text-aurora-cyan">Together</span>
@@ -107,7 +107,7 @@ export default function Home() {
               >
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay" />
                 <div className="relative z-10 text-white">
-                  <h3 className="text-4xl font-extrabold mb-1 drop-shadow-md">{offer.title}</h3>
+                  <h3 className="text-3xl font-extrabold mb-1 drop-shadow-md">{offer.title}</h3>
                   <p className="text-lg font-medium opacity-90">{offer.subtitle}</p>
                 </div>
                 <div className="relative z-10 bg-white/20 backdrop-blur-md border border-white/30 px-4 py-2 rounded-xl text-white font-mono font-bold text-lg shadow-lg">
