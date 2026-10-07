@@ -33,16 +33,21 @@ import ScrollToTop from './components/ScrollToTop';
 import CartDrawer from './components/CartDrawer';
 import AIAssistantDrawer from './components/AIAssistantDrawer';
 
+import { LocationProvider } from './context/LocationContext';
+import LocationModal from './components/LocationModal';
+
 function App() {
   return (
     <AuthProvider>
       <OrderProvider>
         <CartProvider>
           <WishlistProvider>
-            <Router>
-              <ScrollToTop />
-              <CartDrawer />
-              <Routes>
+            <LocationProvider>
+              <Router>
+                <ScrollToTop />
+                <CartDrawer />
+                <LocationModal />
+                <Routes>
                 {/* Auth Routes */}
                 <Route element={<AuthLayout />}>
                   <Route path="/login" element={<Login />} />
@@ -77,7 +82,8 @@ function App() {
               </Routes>
               <AIAssistantDrawer />
             </Router>
-          </WishlistProvider>
+          </LocationProvider>
+        </WishlistProvider>
         </CartProvider>
       </OrderProvider>
     </AuthProvider>

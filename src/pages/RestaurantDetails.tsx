@@ -8,8 +8,11 @@ import Badge from '../components/Badge';
 import Button from '../components/Button';
 import LoadingState from '../components/LoadingState';
 
+import { useLocationContext } from '../context/LocationContext';
+
 export default function RestaurantDetails() {
   const { id } = useParams();
+  const { getLocalizedRestaurants } = useLocationContext();
   const [restaurant, setRestaurant] = useState<typeof restaurants[0] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [notFound, setNotFound] = useState(false);
@@ -21,14 +24,15 @@ export default function RestaurantDetails() {
       setNotFound(true);
       return;
     }
-    const found = restaurants.find(r => r.id === restId);
+    const localized = getLocalizedRestaurants();
+    const found = localized.find(r => r.id === restId) || restaurants.find(r => r.id === restId);
     if (found) {
       setRestaurant(found);
       setActiveCategory(found.menuCategories[0]);
     } else {
       setNotFound(true);
     }
-  }, [id]);
+  }, [id, getLocalizedRestaurants]);
 
   if (notFound) {
     return (

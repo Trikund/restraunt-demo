@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, Sun, Moon, Menu, X, Home, UtensilsCrossed, Store, Tag, CalendarDays, Info, Phone } from 'lucide-react';
+import { ShoppingBag, Search, Sun, Moon, Menu, X, Home, UtensilsCrossed, Store, Tag, CalendarDays, Info, Phone, MapPin, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLocationContext } from '../context/LocationContext';
 import SearchModal from './SearchModal';
 import MockRoleSwitcher from './MockRoleSwitcher';
 
@@ -22,6 +23,7 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
   const location = useLocation();
   const { totalQuantity, openCart } = useCart();
+  const { city, area, setIsModalOpen } = useLocationContext();
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains('dark'));
@@ -50,17 +52,30 @@ export default function Navbar() {
           ? 'bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 shadow-sm' 
           : 'bg-transparent'
       }`}>
-        <div className="container mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
+        <div className="container mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-3">
           
-          {/* 🍽️ Logo */}
-          <Link to="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-aurora-cyan/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <UtensilsCrossed className="text-aurora-cyan" size={24} />
-            </div>
-            <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Aurora<span className="text-aurora-cyan">Food</span>
-            </span>
-          </Link>
+          {/* 🍽️ Logo + Location Pill */}
+          <div className="flex items-center gap-3 shrink-0">
+            <Link to="/" className="flex items-center gap-2 group shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-aurora-cyan/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <UtensilsCrossed className="text-aurora-cyan" size={24} />
+              </div>
+              <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Aurora<span className="text-aurora-cyan">Food</span>
+              </span>
+            </Link>
+
+            {/* Quick Location Trigger */}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-aurora-cyan/40 hover:bg-slate-200 dark:hover:bg-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shrink-0 max-w-[180px]"
+              title="Change delivery location"
+            >
+              <MapPin size={13} className="text-aurora-cyan shrink-0" />
+              <span className="truncate">{area}, {city}</span>
+              <ChevronDown size={11} className="text-slate-400 shrink-0" />
+            </button>
+          </div>
 
           {/* 🖥️ Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-1">
@@ -176,6 +191,23 @@ export default function Navbar() {
               onClick={() => setIsMobileOpen(false)}
             >
               <X size={16} />
+            </button>
+          </div>
+
+          {/* Location selector in mobile drawer */}
+          <div className="px-4 py-3 bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/8">
+            <button
+              onClick={() => {
+                setIsMobileOpen(false);
+                setIsModalOpen(true);
+              }}
+              className="w-full flex items-center justify-between text-left p-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <MapPin size={14} className="text-aurora-cyan shrink-0" />
+                <span className="truncate">{area}, {city}</span>
+              </div>
+              <span className="text-[10px] text-aurora-cyan font-bold uppercase shrink-0 ml-1">Change</span>
             </button>
           </div>
 

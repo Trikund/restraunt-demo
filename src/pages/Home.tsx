@@ -9,18 +9,22 @@ import MenuItemCard from '../components/MenuItemCard';
 
 // Import Mock Data
 import { categories, restaurants, offers, allDishes } from '../data/mockData';
+import { useLocationContext } from '../context/LocationContext';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { city, setIsModalOpen, getLocalizedRestaurants } = useLocationContext();
   const [specialMenuCategory, setSpecialMenuCategory] = useState('All');
   
+  const localizedRestaurants = getLocalizedRestaurants();
+  
   const filteredSpecialDishes = specialMenuCategory === 'All' 
-    ? allDishes.slice(0, 8).map((m, i) => ({ ...m, restaurant: restaurants[i % restaurants.length].name }))
+    ? allDishes.slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
     : specialMenuCategory === 'Veg'
-      ? allDishes.filter(dish => dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: restaurants[i % restaurants.length].name }))
+      ? allDishes.filter(dish => dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
     : specialMenuCategory === 'Non-Veg'
-      ? allDishes.filter(dish => !dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: restaurants[i % restaurants.length].name }))
-    : allDishes.filter(dish => dish.name.toLowerCase().includes(specialMenuCategory.toLowerCase()) || dish.category.toLowerCase().includes(specialMenuCategory.toLowerCase())).slice(0, 8).map((m, i) => ({ ...m, restaurant: restaurants[i % restaurants.length].name }));
+      ? allDishes.filter(dish => !dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
+    : allDishes.filter(dish => dish.name.toLowerCase().includes(specialMenuCategory.toLowerCase()) || dish.category.toLowerCase().includes(specialMenuCategory.toLowerCase())).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }));
 
   return (
     <div className="pb-20">
@@ -55,15 +59,29 @@ export default function Home() {
             
             {/* Search Bar */}
             <div className="max-w-xl mx-auto md:mx-0 mb-12 bg-[#ffffff] dark:bg-black/40 backdrop-blur-md rounded-full p-2 flex items-center shadow-xl shadow-black/5 dark:shadow-aurora-cyan/5 border border-slate-200 dark:border-white/10">
-              <div className="pl-4 text-slate-400">
-                <MapPin size={20} />
-              </div>
+              <button 
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="pl-4 pr-3 py-1 flex items-center gap-1.5 text-xs font-bold text-aurora-cyan border-r border-slate-200 dark:border-white/10 hover:opacity-80 transition-opacity cursor-pointer shrink-0"
+                title="Change delivery location"
+              >
+                <MapPin size={18} />
+                <span className="max-w-[110px] truncate">{city}</span>
+              </button>
               <input 
                 type="text" 
-                placeholder="Search for restaurants, cuisines, or dishes..." 
-                className="flex-1 bg-transparent border-none text-slate-900 dark:text-white px-4 py-3 focus:outline-none placeholder:text-slate-400"
+                placeholder="Search dishes or cuisines near you..." 
+                className="flex-1 bg-transparent border-none text-slate-900 dark:text-white px-4 py-3 focus:outline-none placeholder:text-slate-400 text-sm"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/restaurants?search=${(e.target as HTMLInputElement).value}`);
+                  }
+                }}
               />
-              <button className="bg-aurora-cyan hover:bg-aurora-blue text-[#111111] p-3.5 rounded-full transition-colors flex items-center justify-center font-bold">
+              <button 
+                onClick={() => navigate('/restaurants')}
+                className="bg-aurora-cyan hover:bg-aurora-blue text-[#111111] p-3.5 rounded-full transition-colors flex items-center justify-center font-bold shrink-0 cursor-pointer"
+              >
                 <ArrowRight size={20} />
               </button>
             </div>
@@ -132,7 +150,7 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {restaurants.map(restaurant => (
+            {localizedRestaurants.slice(0, 8).map(restaurant => (
               <RestaurantCard key={restaurant.id} restaurant={restaurant} />
             ))}
           </div>

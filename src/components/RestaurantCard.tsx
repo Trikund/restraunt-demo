@@ -1,4 +1,4 @@
-import { Heart, Clock, Tag } from 'lucide-react';
+import { Heart, Clock, Tag, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GlassCard from './GlassCard';
 import Rating from './Rating';
@@ -15,6 +15,8 @@ export interface RestaurantProps {
     deliveryTimeString: string;
     priceRange: string;
     image: string;
+    location?: string;
+    distanceKm?: number;
     featured?: boolean;
     hasOffers?: boolean;
     offerDetails?: string | null;
@@ -74,13 +76,24 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
             </span>
           </div>
           
-          <p className="text-sm text-slate-400 mb-3">{restaurant.cuisine}</p>
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-3 gap-2">
+            <span className="truncate">{restaurant.cuisine}</span>
+            {restaurant.location && (
+              <span className="flex items-center gap-1 text-slate-400 truncate shrink-0 max-w-[130px]" title={restaurant.location}>
+                <MapPin size={11} className="text-aurora-cyan shrink-0" />
+                <span className="truncate">{restaurant.location}</span>
+              </span>
+            )}
+          </div>
           
           <div className="mt-auto pt-4 border-t border-glass-border flex items-center justify-between">
             <Rating score={restaurant.rating} reviews={restaurant.reviews} showReviews />
             
-            <div className="flex items-center text-sm font-medium text-slate-300">
-              <Clock size={14} className="mr-1 text-aurora-blue" />
+            <div className="flex items-center text-xs font-semibold text-slate-300">
+              {restaurant.distanceKm && (
+                <span className="text-aurora-cyan mr-1.5 font-bold">{restaurant.distanceKm} km •</span>
+              )}
+              <Clock size={12} className="mr-1 text-aurora-blue shrink-0" />
               {restaurant.deliveryTimeString}
             </div>
           </div>
