@@ -40,25 +40,8 @@
 }
 
 @layer base {
-  :root {
-    /* LIGHT THEME (Default) */
-    --bg: #FAFAFA;
-    --fg: #111111;
-    --muted: #475569;
-    --glass-surface: rgba(255, 255, 255, 0.95);
-    --glass-surface-hover: rgba(255, 255, 255, 1);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-border-hover: rgba(255, 184, 0, 0.5);
-
-    /* Flip semantic colors */
-    --theme-white: #111111; /* White text becomes dark */
-    --theme-slate-300: #475569;
-    --theme-slate-400: #64748b;
-    --theme-black: #ffffff; /* Black bg becomes white */
-  }
-
-  .dark {
-    /* DARK THEME */
+  :root, .dark {
+    /* DARK THEME (Default) */
     --bg: #0a0a0a;
     --fg: #f8fafc;
     --muted: #94a3b8;
@@ -72,6 +55,23 @@
     --theme-slate-300: #cbd5e1;
     --theme-slate-400: #94a3b8;
     --theme-black: #000000;
+  }
+
+  :root:not(.dark), .light {
+    /* LIGHT THEME */
+    --bg: #FAFAFA;
+    --fg: #111111;
+    --muted: #475569;
+    --glass-surface: rgba(255, 255, 255, 0.95);
+    --glass-surface-hover: rgba(255, 255, 255, 1);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-hover: rgba(255, 184, 0, 0.5);
+
+    /* Flip semantic colors */
+    --theme-white: #111111; /* White text becomes dark */
+    --theme-slate-300: #475569;
+    --theme-slate-400: #64748b;
+    --theme-black: #ffffff; /* Black bg becomes white */
   }
 
   body {

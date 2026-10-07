@@ -1,12 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>aurora-food</title>
+    <title>AuroraFood</title>
+    <script>
+      (function() {
+        try {
+          const theme = localStorage.getItem('theme');
+          if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+            if (!theme) localStorage.setItem('theme', 'dark');
+          }
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
-  <body>
+  <body class="bg-[#0a0a0a] text-[#f8fafc]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
