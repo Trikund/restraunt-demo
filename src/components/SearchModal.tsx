@@ -15,13 +15,17 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  const handleClose = () => {
+    setQuery('');
+    onClose();
+  };
+
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-      setQuery('');
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -30,7 +34,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const handleResultClick = (path: string) => {
     navigate(path);
-    onClose();
+    handleClose();
   };
 
   const filteredDishes = query.length > 1 
@@ -51,7 +55,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100]"
           />
           <motion.div
@@ -72,7 +76,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   className="w-full bg-transparent border-none text-white text-lg py-5 pl-14 pr-12 focus:outline-none focus:ring-0 placeholder-slate-500"
                 />
                 <button 
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="absolute right-4 p-1 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   <X size={20} />

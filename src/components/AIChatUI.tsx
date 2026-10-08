@@ -29,6 +29,12 @@ interface AIChatUIProps {
   isFullScreen?: boolean;
 }
 
+let messageCounter = 0;
+function createMessageId(prefix: string) {
+  messageCounter += 1;
+  return `${prefix}-${Date.now()}-${messageCounter}`;
+}
+
 export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -55,7 +61,7 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
     if (!text.trim()) return;
 
     // Add user message
-    const newMsg: ChatMessage = { id: Date.now().toString(), sender: 'user', text };
+    const newMsg: ChatMessage = { id: createMessageId('user'), sender: 'user', text };
     setMessages(prev => [...prev, newMsg]);
     setInputValue('');
     setIsTyping(true);
@@ -83,7 +89,7 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
       setMessages(prev => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: createMessageId('bot'),
           sender: 'assistant',
           text: aiText,
           recommendations: recs

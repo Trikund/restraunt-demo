@@ -24,13 +24,14 @@ export default function DeliveryTrackingMap({
   height = 'h-full',
   className = ''
 }: DeliveryTrackingMapProps) {
-  const [partnerPos, setPartnerPos] = useState({ x: 20, y: 80 });
-  const [isMoving, setIsMoving] = useState(false);
+  const [partnerPos, setPartnerPos] = useState(() => (
+    status === OrderStatus.DELIVERED ? { x: 80, y: 50 } : { x: 20, y: 80 }
+  ));
+  const isMoving = status === OrderStatus.OUT_FOR_DELIVERY;
 
   // Animation logic for when OUT_FOR_DELIVERY
   useEffect(() => {
     if (status === OrderStatus.OUT_FOR_DELIVERY) {
-      setIsMoving(true);
       let progress = 0;
       const interval = setInterval(() => {
         progress += 0.01;
@@ -51,24 +52,15 @@ export default function DeliveryTrackingMap({
       }, 50);
 
       return () => clearInterval(interval);
-    } else if (
-      status === OrderStatus.DELIVERED
-    ) {
-      setPartnerPos({ x: 80, y: 50 }); // Home position
-      setIsMoving(false);
-    } else if (
-      status === OrderStatus.PLACED ||
-      status === OrderStatus.RESTAURANT_ACCEPTED ||
-      status === OrderStatus.PREPARING ||
-      status === OrderStatus.READY_FOR_PICKUP
-    ) {
-       // Partner isn't there yet
-       setIsMoving(false);
-    } else {
-       // Partner arrived at restaurant or on the way to restaurant
-       setPartnerPos({ x: 20, y: 80 }); // Restaurant position
-       setIsMoving(false);
     }
+
+    if (status === OrderStatus.DELIVERED) {
+      const timer = setTimeout(() => setPartnerPos({ x: 80, y: 50 }), 0);
+      return () => clearTimeout(timer);
+    }
+
+    const timer = setTimeout(() => setPartnerPos({ x: 20, y: 80 }), 0);
+    return () => clearTimeout(timer);
   }, [status]);
 
   const showPartner = ([

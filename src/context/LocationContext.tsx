@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { restaurants, type Restaurant } from '../data/mockData';
 
 export interface CityHub {
@@ -48,14 +48,6 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('aurora_area', area);
   }, [city, area]);
 
-  // Auto-detect on initial mount if not explicitly set before
-  useEffect(() => {
-    const hasDetectedBefore = localStorage.getItem('aurora_location_detected');
-    if (!hasDetectedBefore) {
-      detectGPSLocation();
-    }
-  }, []);
-
   const setCityAndArea = (newCity: string, newArea?: string) => {
     const hub = POPULAR_CITIES.find(h => h.city.toLowerCase() === newCity.toLowerCase());
     const selectedArea = newArea || (hub ? hub.areas[0] : 'Central');
@@ -65,7 +57,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     setIsModalOpen(false);
   };
 
-  const detectGPSLocation = async (): Promise<boolean> => {
+  const detectGPSLocation = useCallback(async (): Promise<boolean> => {
     setIsDetecting(true);
 
     const applyDetectedData = (detectedCity: string, detectedArea?: string) => {
@@ -78,7 +70,6 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('aurora_location_detected', 'true');
     };
 
-    // 1. Try Browser Geolocation API with fast reverse geocoding
     if (navigator.geolocation) {
       try {
         const position = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -100,7 +91,6 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // 2. Fast IP Geolocation fallback (works without permission popups!)
     try {
       const ipRes = await fetch('https://ipapi.co/json/');
       if (ipRes.ok) {
@@ -115,14 +105,22 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       console.warn('IP location fetch failed', err);
     }
 
-    // 3. Fallback to default Dehradun
     applyDetectedData('Dehradun', 'Rajpur Road');
     setIsDetecting(false);
     return false;
-  };
+  }, []);
 
-  // Generate realistically localized restaurants for the current active city
-  const getLocalizedRestaurants = (): Restaurant[] => {
+  useEffect(() => {
+    const hasDetectedBefore = localStorage.getItem('aurora_location_detected');
+    if (!hasDetectedBefore) {
+      const timer = setTimeout(() => {
+        detectGPSLocation();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [detectGPSLocation]);
+
+  const getLocalizedRestaurants = useCallback((): Restaurant[] => {
     const hub = POPULAR_CITIES.find(h => h.city.toLowerCase() === city.toLowerCase());
     const availableAreas = hub?.areas || ['Main Market', 'Civil Lines', 'Mall Road', 'Food Street'];
 
@@ -140,7 +138,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         deliveryTimeString: `${deliveryMins}-${deliveryMins + 10} min`,
       };
     });
-  };
+  }, [city]);
 
   const fullAddress = `${area}, ${city}`;
 

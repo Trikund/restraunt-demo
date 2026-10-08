@@ -44,36 +44,39 @@ export default function Tracking() {
   const order = getOrderById(orderId || '');
   const prevStatus = useRef<OrderStatus | null>(null);
 
+  const orderStatus = order?.orderStatus;
+  const currentOrderId = order?.orderId;
+
   // Background auto-simulation
   useEffect(() => {
-    if (!order) return;
+    if (!orderStatus || !currentOrderId) return;
     
     // Notification on status change
-    if (prevStatus.current && prevStatus.current !== order.orderStatus) {
-      const step = STATUS_STEPS.find(s => s.id === order.orderStatus);
+    if (prevStatus.current && prevStatus.current !== orderStatus) {
+      const step = STATUS_STEPS.find(s => s.id === orderStatus);
       if (step) {
         notify('Order Update', step.msg);
       }
     }
-    prevStatus.current = order.orderStatus;
+    prevStatus.current = orderStatus;
 
-    if (order.orderStatus === OrderStatus.DELIVERED && !showReview) {
+    if (orderStatus === OrderStatus.DELIVERED && !showReview) {
       const timer = setTimeout(() => setShowReview(true), 2000);
       return () => clearTimeout(timer);
     }
 
     // Call our tracking service simulation
     const timeoutId = trackingService.simulateOrderProgress(
-      order.orderStatus,
+      orderStatus,
       (updates) => {
-        updateOrderTracking(order.orderId, updates);
+        updateOrderTracking(currentOrderId, updates);
       }
     );
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [order?.orderStatus, order?.orderId, showReview]);
+  }, [orderStatus, currentOrderId, showReview, updateOrderTracking]);
 
   if (!order) {
     return (

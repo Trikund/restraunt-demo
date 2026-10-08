@@ -6,7 +6,6 @@ import { allDishes, restaurants } from '../data/mockData';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
-import LoadingState from '../components/LoadingState';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 
@@ -15,39 +14,28 @@ export default function FoodDetails() {
   const navigate = useNavigate();
   const { toggleDish, isDishSaved } = useWishlist();
   const { addToCart } = useCart();
-  
-  const [food, setFood] = useState<typeof allDishes[0] | null>(null);
-  const [notFound, setNotFound] = useState(false);
+
+  const dishId = Number(id);
+  const food = id && !isNaN(dishId) ? allDishes.find(d => d.id === dishId) : undefined;
+
   const [quantity, setQuantity] = useState(1);
-  const [selectedCustomizations, setSelectedCustomizations] = useState<Record<string, string>>({});
+  const [selectedCustomizations, setSelectedCustomizations] = useState<Record<string, string>>(() => {
+    const defaults: Record<string, string> = {};
+    food?.customizations?.forEach(cust => {
+      if (cust.options.length > 0) {
+        defaults[cust.name] = cust.options[0].name;
+      }
+    });
+    return defaults;
+  });
 
   const saved = food ? isDishSaved(food.id) : false;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const dishId = Number(id);
-    if (!id || isNaN(dishId)) {
-      setNotFound(true);
-      return;
-    }
-    const found = allDishes.find(d => d.id === dishId);
-    if (found) {
-      setFood(found as any);
-      
-      // Initialize default customizations
-      const defaults: Record<string, string> = {};
-      found.customizations?.forEach(cust => {
-        if (cust.options.length > 0) {
-          defaults[cust.name] = cust.options[0].name;
-        }
-      });
-      setSelectedCustomizations(defaults);
-    } else {
-      setNotFound(true);
-    }
   }, [id]);
 
-  if (notFound) {
+  if (!food) {
     return (
       <div className="pt-32 pb-20 container mx-auto px-4 flex flex-col items-center justify-center min-h-[60vh] text-center">
         <h1 className="text-3xl font-extrabold text-white mb-3">Dish Not Found</h1>
@@ -58,10 +46,6 @@ export default function FoodDetails() {
         </div>
       </div>
     );
-  }
-
-  if (!food) {
-    return <LoadingState fullScreen message="Loading dish details..." />;
   }
 
   // Calculate final price based on base price + customizations * quantity

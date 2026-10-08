@@ -6,35 +6,29 @@ import GlassCard from '../components/GlassCard';
 import MenuItemCard from '../components/MenuItemCard';
 import Badge from '../components/Badge';
 import Button from '../components/Button';
-import LoadingState from '../components/LoadingState';
-
 import { useLocationContext } from '../context/LocationContext';
 
 export default function RestaurantDetails() {
   const { id } = useParams();
   const { getLocalizedRestaurants } = useLocationContext();
-  const [restaurant, setRestaurant] = useState<typeof restaurants[0] | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>('');
-  const [notFound, setNotFound] = useState(false);
+
+  const restId = Number(id);
+  const localized = getLocalizedRestaurants();
+  const restaurant = id && !isNaN(restId)
+    ? (localized.find(r => r.id === restId) || restaurants.find(r => r.id === restId))
+    : undefined;
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const activeCategory = (selectedCategory && restaurant?.menuCategories.includes(selectedCategory))
+    ? selectedCategory
+    : (restaurant?.menuCategories[0] || '');
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const restId = Number(id);
-    if (!id || isNaN(restId)) {
-      setNotFound(true);
-      return;
-    }
-    const localized = getLocalizedRestaurants();
-    const found = localized.find(r => r.id === restId) || restaurants.find(r => r.id === restId);
-    if (found) {
-      setRestaurant(found);
-      setActiveCategory(found.menuCategories[0]);
-    } else {
-      setNotFound(true);
-    }
-  }, [id, getLocalizedRestaurants]);
+  }, [id]);
 
-  if (notFound) {
+  if (!restaurant) {
     return (
       <div className="pt-32 pb-20 container mx-auto px-4 flex flex-col items-center justify-center min-h-[60vh] text-center">
         <h1 className="text-3xl font-extrabold text-white mb-3">Restaurant Not Found</h1>
@@ -44,10 +38,6 @@ export default function RestaurantDetails() {
         </Link>
       </div>
     );
-  }
-
-  if (!restaurant) {
-    return <LoadingState fullScreen message="Loading restaurant details..." />;
   }
 
   const activeMenuItems = restaurant.menu.filter(item => item.category === activeCategory);
@@ -133,7 +123,7 @@ export default function RestaurantDetails() {
                 {restaurant.menuCategories.map(cat => (
                   <button
                     key={cat}
-                    onClick={() => setActiveCategory(cat)}
+                    onClick={() => setSelectedCategory(cat)}
                     className={`px-5 py-2.5 rounded-xl whitespace-nowrap text-sm font-semibold transition-all ${
                       activeCategory === cat 
                         ? 'bg-aurora-blue text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]' 

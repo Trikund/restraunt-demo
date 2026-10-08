@@ -8,7 +8,7 @@ import RestaurantCard from '../components/RestaurantCard';
 import MenuItemCard from '../components/MenuItemCard';
 
 // Import Mock Data
-import { categories, restaurants, offers, allDishes } from '../data/mockData';
+import { categories, offers, allDishes } from '../data/mockData';
 import { useLocationContext } from '../context/LocationContext';
 
 export default function Home() {
@@ -18,13 +18,18 @@ export default function Home() {
   
   const localizedRestaurants = getLocalizedRestaurants();
   
-  const filteredSpecialDishes = specialMenuCategory === 'All' 
-    ? allDishes.slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
-    : specialMenuCategory === 'Veg'
-      ? allDishes.filter(dish => dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
-    : specialMenuCategory === 'Non-Veg'
-      ? allDishes.filter(dish => !dish.vegetarian).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }))
-    : allDishes.filter(dish => dish.name.toLowerCase().includes(specialMenuCategory.toLowerCase()) || dish.category.toLowerCase().includes(specialMenuCategory.toLowerCase())).slice(0, 8).map((m, i) => ({ ...m, restaurant: localizedRestaurants[i % localizedRestaurants.length].name }));
+  const dishesByCategory = allDishes.filter(dish => {
+    if (specialMenuCategory === 'All') return true;
+    if (specialMenuCategory === 'Veg') return dish.vegetarian;
+    if (specialMenuCategory === 'Non-Veg') return !dish.vegetarian;
+    const term = specialMenuCategory.toLowerCase();
+    return dish.name.toLowerCase().includes(term) || dish.category.toLowerCase().includes(term);
+  });
+
+  const filteredSpecialDishes = dishesByCategory.slice(0, 8).map((dish, i) => ({
+    ...dish,
+    restaurant: localizedRestaurants[i % localizedRestaurants.length]?.name || dish.restaurant,
+  }));
 
   return (
     <div className="pb-20">

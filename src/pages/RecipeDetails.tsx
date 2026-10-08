@@ -10,44 +10,32 @@ import { recipes } from '../data/mockData';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
-import LoadingState from '../components/LoadingState';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 
 export default function RecipeDetails() {
   const { id } = useParams();
   const { toggleRecipe, isRecipeSaved } = useWishlist();
+  const { addToCart } = useCart();
   
-  const [recipe, setRecipe] = useState<typeof recipes[0] | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const recipeId = Number(id);
+  const recipe = id && !isNaN(recipeId) ? recipes.find(r => r.id === recipeId) : undefined;
+
   const [activeTab, setActiveTab] = useState<'ingredients' | 'instructions' | 'nutrition'>('ingredients');
-  const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set());
+  const [unselectedIngredients, setUnselectedIngredients] = useState<Set<string>>(new Set());
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isCookingMode, setIsCookingMode] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const { addToCart } = useCart();
+  const selectedIngredients = new Set(
+    (recipe?.ingredients || []).filter(ing => !unselectedIngredients.has(ing))
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const recipeId = Number(id);
-    if (!id || isNaN(recipeId)) {
-      setNotFound(true);
-      return;
-    }
-    const found = recipes.find(r => r.id === recipeId);
-    if (found) {
-      setRecipe(found as any);
-      // Select all ingredients by default
-      if (found.ingredients) {
-        setSelectedIngredients(new Set(found.ingredients));
-      }
-    } else {
-      setNotFound(true);
-    }
   }, [id]);
 
-  if (notFound) {
+  if (!recipe) {
     return (
       <div className="pt-32 pb-20 container mx-auto px-4 flex flex-col items-center justify-center min-h-[60vh] text-center">
         <h1 className="text-3xl font-extrabold text-white mb-3">Recipe Not Found</h1>
@@ -59,14 +47,10 @@ export default function RecipeDetails() {
     );
   }
 
-  if (!recipe) {
-    return <LoadingState fullScreen message="Loading recipe details..." />;
-  }
-
   const saved = isRecipeSaved(recipe.id);
 
   const toggleIngredient = (ing: string) => {
-    setSelectedIngredients(prev => {
+    setUnselectedIngredients(prev => {
       const next = new Set(prev);
       if (next.has(ing)) {
         next.delete(ing);

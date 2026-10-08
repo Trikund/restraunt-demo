@@ -22,7 +22,7 @@ export default function Restaurants() {
   const [searchParams] = useSearchParams();
   const initialCuisine = searchParams.get('cuisine') || 'All';
   
-  const { city, area, fullAddress, setIsModalOpen, isDetecting, getLocalizedRestaurants } = useLocationContext();
+  const { city, fullAddress, setIsModalOpen, isDetecting, getLocalizedRestaurants } = useLocationContext();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState(initialCuisine);
@@ -33,7 +33,7 @@ export default function Restaurants() {
   const [isOpenNow, setIsOpenNow] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const localizedRestaurants = useMemo(() => getLocalizedRestaurants(), [city, area]);
+  const localizedRestaurants = useMemo(() => getLocalizedRestaurants(), [getLocalizedRestaurants]);
 
   const filteredRestaurants = useMemo(() => {
     return localizedRestaurants.filter(restaurant => {

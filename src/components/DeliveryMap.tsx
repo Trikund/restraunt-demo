@@ -1,6 +1,5 @@
 import { OrderStatus } from '../types/order';
 import { Store, User, Bike } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 interface Location {
   lat: number;
@@ -15,40 +14,28 @@ interface Props {
   height?: string;
 }
 
-export default function DeliveryMap({ status, height = 'h-[300px]' }: Props) {
-  // We use percentage positions on a fake grid to simulate a map.
-  // Real coordinates are ignored in this mock, we just use fixed positions for visual flair.
-  
-  const [partnerPos, setPartnerPos] = useState({ x: 20, y: 80 }); // Off-screen initially
-  
-  const pickupPos = { x: 25, y: 35 };
-  const dropoffPos = { x: 75, y: 65 };
+const PICKUP_POS = { x: 25, y: 35 };
+const DROPOFF_POS = { x: 75, y: 65 };
 
-  useEffect(() => {
-    // Animate partner position based on status
-    switch (status) {
-      case OrderStatus.PLACED:
-      case OrderStatus.RESTAURANT_ACCEPTED:
-      case OrderStatus.PREPARING:
-      case OrderStatus.READY_FOR_PICKUP:
-        setPartnerPos({ x: 10, y: 90 }); // far away
-        break;
-      case OrderStatus.DELIVERY_ASSIGNED:
-      case OrderStatus.PARTNER_GOING_TO_RESTAURANT:
-        setPartnerPos({ x: 15, y: 60 }); // approaching
-        break;
-      case OrderStatus.PARTNER_ARRIVED:
-      case OrderStatus.ORDER_PICKED_UP:
-        setPartnerPos(pickupPos); // at restaurant
-        break;
-      case OrderStatus.OUT_FOR_DELIVERY:
-        setPartnerPos({ x: 50, y: 50 }); // halfway
-        break;
-      case OrderStatus.DELIVERED:
-        setPartnerPos(dropoffPos); // at customer
-        break;
-    }
-  }, [status]);
+function getPartnerPosition(status: OrderStatus) {
+  switch (status) {
+    case OrderStatus.DELIVERY_ASSIGNED:
+    case OrderStatus.PARTNER_GOING_TO_RESTAURANT:
+      return { x: 15, y: 60 };
+    case OrderStatus.PARTNER_ARRIVED:
+    case OrderStatus.ORDER_PICKED_UP:
+      return PICKUP_POS;
+    case OrderStatus.OUT_FOR_DELIVERY:
+      return { x: 50, y: 50 };
+    case OrderStatus.DELIVERED:
+      return DROPOFF_POS;
+    default:
+      return { x: 10, y: 90 };
+  }
+}
+
+export default function DeliveryMap({ status, height = 'h-[300px]' }: Props) {
+  const partnerPos = getPartnerPosition(status);
 
   return (
     <div className={`w-full ${height} bg-[var(--color-glass-surface)] rounded-2xl border border-white/10 relative overflow-hidden flex items-center justify-center`}>

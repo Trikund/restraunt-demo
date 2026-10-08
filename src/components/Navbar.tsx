@@ -26,10 +26,6 @@ export default function Navbar() {
   const { city, area, setIsModalOpen } = useLocationContext();
 
   useEffect(() => {
-    setIsDark(document.documentElement.classList.contains('dark'));
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -40,10 +36,6 @@ export default function Navbar() {
     setIsDark(isDarkMode);
     localStorage.setItem('aurora_theme', isDarkMode ? 'dark' : 'light');
   };
-
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [location.pathname]);
 
   return (
     <>
@@ -220,6 +212,7 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   to={link.path}
+                  onClick={() => setIsMobileOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
                     isActive
                       ? 'bg-aurora-cyan/10 text-aurora-cyan border border-aurora-cyan/20'
@@ -241,10 +234,18 @@ export default function Navbar() {
 
           {/* Auth buttons in mobile */}
           <div className="px-4 pb-6 grid grid-cols-2 gap-3">
-            <Link to="/login" className="text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/15 text-slate-800 dark:text-white font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+            <Link 
+              to="/login" 
+              onClick={() => setIsMobileOpen(false)}
+              className="text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/15 text-slate-800 dark:text-white font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
+            >
               Login
             </Link>
-            <Link to="/signup" className="text-center py-2.5 rounded-xl bg-aurora-cyan text-[#111111] font-bold text-sm hover:bg-aurora-cyan/90 transition-all">
+            <Link 
+              to="/signup" 
+              onClick={() => setIsMobileOpen(false)}
+              className="text-center py-2.5 rounded-xl bg-aurora-cyan text-[#111111] font-bold text-sm hover:bg-aurora-cyan/90 transition-all"
+            >
               Sign Up
             </Link>
           </div>
