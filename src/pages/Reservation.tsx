@@ -397,7 +397,7 @@ export default function Reservation() {
                           type="text"
                           value={details.name}
                           onChange={e => { setDetails({ ...details, name: e.target.value }); setErrors({ ...errors, name: '' }); }}
-                          placeholder="e.g. Shivam Kumar"
+                          placeholder="e.g. Alex Johnson"
                           className={`w-full bg-white/5 border rounded-xl py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-white/10 focus:border-aurora-cyan focus:ring-aurora-cyan/20'}`}
                         />
                         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}

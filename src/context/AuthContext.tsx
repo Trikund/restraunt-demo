@@ -15,7 +15,7 @@ interface User {
 const MOCK_USERS: Record<UserRole, User> = {
   [UserRole.CUSTOMER]: {
     id: 'cust_123',
-    name: 'Shivam Kumar',
+    name: 'Demo Customer',
     role: UserRole.CUSTOMER,
     phone: '9876543210'
   },
