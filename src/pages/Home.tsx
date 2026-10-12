@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, ChefHat, MapPin } from 'lucide-react';
+import { ArrowRight, Sparkles, ChefHat, MapPin, CalendarDays, Check } from 'lucide-react';
 import SectionHeading from '../components/SectionHeading';
 import Button from '../components/Button';
 import RestaurantCard from '../components/RestaurantCard';
@@ -138,6 +138,81 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </section>
+
+        {/* TIFFIN & MEAL SUBSCRIPTIONS SHOWCASE */}
+        <section className="relative overflow-hidden rounded-[2.5rem] border border-aurora-cyan/30 bg-gradient-to-br from-aurora-cyan/10 via-background to-aurora-purple/10 p-8 md:p-12 shadow-2xl">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+            <div className="max-w-xl text-left">
+              <span className="inline-flex items-center gap-1.5 py-1 px-3.5 rounded-full bg-aurora-cyan/20 text-aurora-cyan border border-aurora-cyan/30 text-xs font-bold uppercase tracking-wider mb-4">
+                <CalendarDays size={14} /> Student & Hostel Special
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
+                Flexible Daily Tiffin & <span className="text-aurora-cyan">Mess Subscriptions</span>
+              </h2>
+              <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                Never worry about cooking or repetitive mess food. Choose from verified local dhabas, messes, and home chefs with customizable 1, 2, or 3 meals/day plans.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Pause on weekends anytime</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Skip meals with 1-click</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Free delivery to your hostel room</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Starting at only ₹549/week</span>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  rightIcon={<ArrowRight size={18} />}
+                  onClick={() => navigate('/subscriptions')}
+                >
+                  Explore Tiffin Plans
+                </Button>
+                <Button 
+                  variant="glass" 
+                  size="lg" 
+                  onClick={() => navigate('/subscriptions/manage')}
+                >
+                  Manage My Meal Calendar
+                </Button>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-96 rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
+              <img 
+                src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1000&auto=format&fit=crop" 
+                alt="Tiffin Meals" 
+                className="w-full h-72 object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-white">
+                <span className="text-xs font-bold text-aurora-cyan">Maa Annapurna Tiffin Center</span>
+                <p className="text-[11px] text-slate-300">4 Phulka + Seasonal Sabzi + Dal + Rice • ₹999/week</p>
+              </div>
+            </div>
           </div>
         </section>
 

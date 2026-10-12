@@ -34,7 +34,10 @@ import CartDrawer from './components/CartDrawer';
 import AIAssistantDrawer from './components/AIAssistantDrawer';
 
 import { LocationProvider } from './context/LocationContext';
+import { SubscriptionProvider } from './context/SubscriptionContext';
 import LocationModal from './components/LocationModal';
+import Subscriptions from './pages/Subscriptions';
+import SubscriptionManage from './pages/SubscriptionManage';
 
 function App() {
   return (
@@ -43,45 +46,49 @@ function App() {
         <CartProvider>
           <WishlistProvider>
             <LocationProvider>
-              <Router>
-                <ScrollToTop />
-                <CartDrawer />
-                <LocationModal />
-                <Routes>
-                {/* Auth Routes */}
-                <Route element={<AuthLayout />}>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                </Route>
+              <SubscriptionProvider>
+                <Router>
+                  <ScrollToTop />
+                  <CartDrawer />
+                  <LocationModal />
+                  <Routes>
+                  {/* Auth Routes */}
+                  <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                  </Route>
 
-                {/* Main App Routes */}
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={<Home />} />
-                  <Route path="restaurants" element={<Restaurants />} />
-                  <Route path="restaurant/:id" element={<RestaurantDetails />} />
-                  <Route path="food/:id" element={<FoodDetails />} />
-                  <Route path="wishlist" element={<Wishlist />} />
-                  <Route path="cart" element={<Cart />} />
-                  <Route path="checkout" element={<Checkout />} />
-                  <Route path="recipes" element={<Recipes />} />
-                  <Route path="recipes/:id" element={<RecipeDetails />} />
-                  <Route path="ai" element={<AIAssistant />} />
-                  <Route path="tracking/:orderId" element={<Tracking />} />
-                  <Route path="profile" element={<Profile />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="reservation" element={<Reservation />} />
-                  <Route path="offers" element={<Offers />} />
-                  <Route path="rewards" element={<Rewards />} />
-                  <Route path="explore" element={<Explore />} />
-                  <Route path="about" element={<About />} />
-                  <Route path="contact" element={<Contact />} />
-                  <Route path="restaurant/dashboard" element={<RestaurantDashboard />} />
-                  <Route path="delivery/dashboard" element={<DeliveryDashboard />} />
-                </Route>
-              </Routes>
-              <AIAssistantDrawer />
-            </Router>
+                  {/* Main App Routes */}
+                  <Route path="/" element={<MainLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="restaurants" element={<Restaurants />} />
+                    <Route path="restaurant/:id" element={<RestaurantDetails />} />
+                    <Route path="food/:id" element={<FoodDetails />} />
+                    <Route path="subscriptions" element={<Subscriptions />} />
+                    <Route path="subscriptions/manage" element={<SubscriptionManage />} />
+                    <Route path="wishlist" element={<Wishlist />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="checkout" element={<Checkout />} />
+                    <Route path="recipes" element={<Recipes />} />
+                    <Route path="recipes/:id" element={<RecipeDetails />} />
+                    <Route path="ai" element={<AIAssistant />} />
+                    <Route path="tracking/:orderId" element={<Tracking />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="reservation" element={<Reservation />} />
+                    <Route path="offers" element={<Offers />} />
+                    <Route path="rewards" element={<Rewards />} />
+                    <Route path="explore" element={<Explore />} />
+                    <Route path="about" element={<About />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="restaurant/dashboard" element={<RestaurantDashboard />} />
+                    <Route path="delivery/dashboard" element={<DeliveryDashboard />} />
+                  </Route>
+                </Routes>
+                <AIAssistantDrawer />
+              </Router>
+            </SubscriptionProvider>
           </LocationProvider>
         </WishlistProvider>
         </CartProvider>
