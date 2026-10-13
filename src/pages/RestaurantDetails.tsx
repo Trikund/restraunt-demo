@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Clock, Star, Info, ArrowLeft, Tag } from 'lucide-react';
+import { MapPin, Clock, Star, Info, ArrowLeft, Tag, Calendar, GraduationCap, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
 import { restaurants } from '../data/mockData';
 import GlassCard from '../components/GlassCard';
 import MenuItemCard from '../components/MenuItemCard';
 import Badge from '../components/Badge';
 import Button from '../components/Button';
+import VendorTypeBadge from '../components/VendorTypeBadge';
+import WeeklyMenuModal from '../components/WeeklyMenuModal';
 import { useLocationContext } from '../context/LocationContext';
 
 export default function RestaurantDetails() {
@@ -19,6 +21,7 @@ export default function RestaurantDetails() {
     : undefined;
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showWeeklyMenu, setShowWeeklyMenu] = useState(false);
 
   const activeCategory = (selectedCategory && restaurant?.menuCategories.includes(selectedCategory))
     ? selectedCategory
@@ -74,8 +77,21 @@ export default function RestaurantDetails() {
             <GlassCard className="p-6 md:p-8 mb-8 bg-background/80 backdrop-blur-2xl">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                 <div>
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    {restaurant.vendorType && (
+                      <VendorTypeBadge type={restaurant.vendorType} />
+                    )}
                     {restaurant.featured && <Badge variant="aurora">Featured</Badge>}
+                    {restaurant.campusProximity && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-aurora-cyan/30 bg-aurora-cyan/10 text-aurora-cyan text-[11px] font-semibold">
+                        <GraduationCap size={12} /> {restaurant.campusProximity}
+                      </span>
+                    )}
+                    {restaurant.fssaiVerified && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-[11px] font-semibold">
+                        <ShieldCheck size={12} /> FSSAI Verified
+                      </span>
+                    )}
                     {restaurant.vegetarian && <Badge variant="success">Vegetarian Options</Badge>}
                     {restaurant.isOpenNow ? (
                       <Badge variant="glass" className="border-status-success/50 text-status-success">Open Now</Badge>
@@ -98,7 +114,34 @@ export default function RestaurantDetails() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-6 border-t border-white/10">
+              {/* 7-Day Rotating Menu CTA Banner */}
+              {(restaurant.weeklySchedule || restaurant.vendorType === 'Tiffin Service' || restaurant.vendorType === 'Student Mess' || restaurant.vendorType === 'Home Chef') && (
+                <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-aurora-cyan/15 via-aurora-blue/10 to-transparent border border-aurora-cyan/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg shadow-aurora-cyan/5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-aurora-cyan/20 border border-aurora-cyan/40 text-aurora-cyan flex items-center justify-center shrink-0">
+                      <Calendar size={20} />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                        Daily Rotating Thali Schedule <Sparkles size={14} className="text-aurora-cyan" />
+                      </h4>
+                      <p className="text-xs text-slate-300 mt-0.5">
+                        Different fresh home-style menu everyday for lunch & dinner.
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    variant="primary" 
+                    size="sm" 
+                    onClick={() => setShowWeeklyMenu(true)}
+                    className="shrink-0 font-bold"
+                  >
+                    View Weekly Schedule
+                  </Button>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/10">
                 <div className="flex items-start gap-3 text-slate-300">
                   <MapPin size={20} className="text-aurora-cyan mt-0.5 shrink-0" />
                   <span>{restaurant.location}</span>
@@ -196,9 +239,36 @@ export default function RestaurantDetails() {
                 </li>
               </ul>
             </GlassCard>
+
+            {/* Subscription Plans Promo Banner */}
+            {restaurant.hasSubscriptions && (
+              <GlassCard className="p-6 bg-gradient-to-br from-emerald-500/15 via-aurora-cyan/10 to-transparent border-emerald-500/30 relative overflow-hidden">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 inline-block mb-3">
+                  Daily Tiffin Available
+                </span>
+                <h3 className="text-lg font-bold text-white mb-1">Save 35% with Monthly Plan</h3>
+                <p className="text-xs text-slate-300 mb-4 leading-relaxed">
+                  Get daily hot home-cooked meals delivered to your room. Flexible weekend pause & slot skipping included.
+                </p>
+                <Link to="/subscriptions">
+                  <Button variant="primary" size="sm" fullWidth rightIcon={<ArrowRight size={14} />}>
+                    View Tiffin Plans
+                  </Button>
+                </Link>
+              </GlassCard>
+            )}
           </div>
         </div>
       </div>
+
+      {/* 7-Day Rotating Menu Modal */}
+      <WeeklyMenuModal 
+        isOpen={showWeeklyMenu}
+        onClose={() => setShowWeeklyMenu(false)}
+        vendorName={restaurant.name}
+        vendorType={restaurant.vendorType}
+        weeklySchedule={restaurant.weeklySchedule}
+      />
     </div>
   );
 }

@@ -1,8 +1,10 @@
-import { Heart, Clock, Tag, MapPin } from 'lucide-react';
+import { Heart, Clock, Tag, MapPin, GraduationCap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GlassCard from './GlassCard';
 import Rating from './Rating';
 import Badge from './Badge';
+import VendorTypeBadge from './VendorTypeBadge';
+import type { VendorArchetype } from './VendorTypeBadge';
 import { useWishlist } from '../context/WishlistContext';
 
 export interface RestaurantProps {
@@ -20,6 +22,9 @@ export interface RestaurantProps {
     featured?: boolean;
     hasOffers?: boolean;
     offerDetails?: string | null;
+    vendorType?: VendorArchetype;
+    campusProximity?: string;
+    hasSubscriptions?: boolean;
   };
 }
 
@@ -42,7 +47,10 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
             }}
           />
           
-          <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
+          <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 items-start">
+            {restaurant.vendorType && restaurant.vendorType !== 'Restaurant' && (
+              <VendorTypeBadge type={restaurant.vendorType} />
+            )}
             {restaurant.featured && (
               <Badge variant="aurora">Featured</Badge>
             )}
@@ -76,7 +84,7 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
             </span>
           </div>
           
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-3 gap-2">
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-2 gap-2">
             <span className="truncate">{restaurant.cuisine}</span>
             {restaurant.location && (
               <span className="flex items-center gap-1 text-slate-400 truncate shrink-0 max-w-[130px]" title={restaurant.location}>
@@ -85,6 +93,15 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
               </span>
             )}
           </div>
+          
+          {restaurant.campusProximity && (
+            <div className="mb-3">
+              <span className="text-[11px] font-medium text-aurora-cyan bg-aurora-cyan/10 border border-aurora-cyan/20 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                <GraduationCap size={12} className="shrink-0" />
+                {restaurant.campusProximity}
+              </span>
+            </div>
+          )}
           
           <div className="mt-auto pt-4 border-t border-glass-border flex items-center justify-between">
             <Rating score={restaurant.rating} reviews={restaurant.reviews} showReviews />

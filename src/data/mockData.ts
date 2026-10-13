@@ -42,6 +42,15 @@ export interface ReviewItem {
   text: string;
 }
 
+export type VendorArchetype = 'Tiffin Service' | 'Student Mess' | 'Home Chef' | 'Dhaba' | 'Restaurant';
+
+export interface DaySchedule {
+  lunch: string;
+  dinner: string;
+}
+
+export type WeeklySchedule = Record<'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday', DaySchedule>;
+
 export interface Restaurant {
   id: number;
   name: string;
@@ -64,9 +73,182 @@ export interface Restaurant {
   reviewsList: ReviewItem[];
   city?: string;
   distanceKm?: number;
+  vendorType?: VendorArchetype;
+  campusProximity?: string;
+  fssaiVerified?: boolean;
+  hasSubscriptions?: boolean;
+  weeklySchedule?: WeeklySchedule;
 }
 
 export const restaurants: Restaurant[] = [
+  {
+    id: 101,
+    name: 'Maa Annapurna Tiffin Center',
+    rating: 4.8,
+    reviews: 640,
+    cuisine: 'North Indian • Tiffin Thali',
+    deliveryTime: 25,
+    deliveryTimeString: '20-30 min',
+    priceRange: '₹',
+    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1000&auto=format&fit=crop',
+    featured: true,
+    vegetarian: true,
+    hasOffers: true,
+    isOpenNow: true,
+    location: 'Campus Road, Near Boys Hostel Gate',
+    offerDetails: '10% Student Discount with College ID',
+    about: 'Pure vegetarian homestyle tiffins delivered fresh in insulated hot containers. Daily rotating seasonal sabzi, light cow ghee phulkas, and comforting dal.',
+    vendorType: 'Tiffin Service',
+    campusProximity: '400m from Campus Gate • Free Hostel Delivery',
+    fssaiVerified: true,
+    hasSubscriptions: true,
+    menuCategories: ['Special Thali', 'Daily Tiffin', 'Breads & Rice'],
+    menu: [
+      {
+        id: 1101, category: 'Special Thali', name: 'Deluxe Homestyle Thali', price: 90, rating: 4.9,
+        description: '4 Butter Phulkas, Paneer Sabzi, Dal Tadka, Jeera Rice, Salad & Gulab Jamun.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Wheat Flour', 'Paneer', 'Arhar Dal', 'Basmati Rice'],
+        allergens: ['Dairy', 'Gluten'],
+        customizations: []
+      },
+      {
+        id: 1102, category: 'Daily Tiffin', name: 'Standard Student Tiffin', price: 70, rating: 4.8,
+        description: '4 Soft Phulkas, Seasonal Sabzi of the day, Yellow Dal & Steamed Rice.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Wheat Flour', 'Mixed Vegetables', 'Dal', 'Rice'],
+        allergens: ['Gluten'],
+        customizations: []
+      },
+      {
+        id: 1103, category: 'Breads & Rice', name: 'Rajma Chawal Combo', price: 65, rating: 4.8,
+        description: 'Authentic Punjabi style slow-cooked Rajma with fragrant steamed Basmati rice and onions.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Red Kidney Beans', 'Basmati Rice', 'Spices'],
+        allergens: [],
+        customizations: []
+      }
+    ],
+    reviewsList: [
+      { id: 1, user: 'Aryan K.', rating: 5, date: 'Yesterday', text: 'Best tiffin in the area! Light on oil and tastes just like home food.' }
+    ]
+  },
+  {
+    id: 102,
+    name: 'Pahadi Student Mess & Dhaba',
+    rating: 4.6,
+    reviews: 820,
+    cuisine: 'North Indian • Pocket Dhaba',
+    deliveryTime: 20,
+    deliveryTimeString: '15-25 min',
+    priceRange: '₹',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=1000&auto=format&fit=crop',
+    featured: true,
+    vegetarian: true,
+    hasOffers: true,
+    isOpenNow: true,
+    location: 'Premnagar Market, Near University Chowk',
+    offerDetails: 'Unlimited Gravy Refill on Dine-in',
+    about: 'Pocket-friendly student mess serving wholesome meals at subsidized rates. Popular for quick deliveries to college hostels.',
+    vendorType: 'Student Mess',
+    campusProximity: '600m from College • Doorstep Delivery',
+    fssaiVerified: true,
+    hasSubscriptions: true,
+    menuCategories: ['Mess Specials', 'Parathas'],
+    menu: [
+      {
+        id: 1201, category: 'Mess Specials', name: 'Hostel Saver Thali', price: 60, rating: 4.7,
+        description: '5 Tawa Rotis, Aloo Jeera, Dal Fry, Rice & Pickle. The ultimate budget meal.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Wheat Flour', 'Potatoes', 'Lentils', 'Rice'],
+        allergens: ['Gluten'],
+        customizations: []
+      },
+      {
+        id: 1202, category: 'Parathas', name: 'Aloo Pyaz Paratha (2 Pcs)', price: 50, rating: 4.8,
+        description: 'Crispy tawa parathas stuffed with spiced potatoes and onions, served with butter & curd.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Wheat Flour', 'Potatoes', 'Onions', 'Butter'],
+        allergens: ['Gluten', 'Dairy'],
+        customizations: []
+      }
+    ],
+    reviewsList: [
+      { id: 1, user: 'Rohan M.', rating: 5, date: '3 days ago', text: 'Best budget food during exam nights. Parathas are super filling.' }
+    ]
+  },
+  {
+    id: 103,
+    name: 'Homely Bites by Sunita',
+    rating: 4.9,
+    reviews: 410,
+    cuisine: 'Home Cooked • Low Oil',
+    deliveryTime: 30,
+    deliveryTimeString: '25-35 min',
+    priceRange: '₹₹',
+    image: 'https://images.unsplash.com/photo-1505253758473-96b3d5ebcd96?q=80&w=1000&auto=format&fit=crop',
+    featured: false,
+    vegetarian: true,
+    hasOffers: false,
+    isOpenNow: true,
+    location: 'Residential Sector 4, Campus Colony',
+    offerDetails: null,
+    about: 'Nutritious home-cooked food by an experienced home chef. Prepared with minimal spices, pure ghee, and zero additives.',
+    vendorType: 'Home Chef',
+    campusProximity: '1.2 km from Campus • Insulated Box Delivery',
+    fssaiVerified: true,
+    hasSubscriptions: true,
+    menuCategories: ['Home Chef Specials'],
+    menu: [
+      {
+        id: 1301, category: 'Home Chef Specials', name: 'Ghar Ka Khana Box', price: 95, rating: 4.9,
+        description: '4 Desi Ghee Phulkas, Panchmel Dal, Bhindi Fry, Steamed Rice, Mint Curd.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1505253758473-96b3d5ebcd96?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Desi Ghee', 'Wheat Flour', 'Okra', 'Mixed Dal'],
+        allergens: ['Gluten', 'Dairy'],
+        customizations: []
+      }
+    ],
+    reviewsList: [
+      { id: 1, user: 'Pooja S.', rating: 5, date: '5 days ago', text: 'Just like my mom cooks! Truly light on the stomach.' }
+    ]
+  },
+  {
+    id: 105,
+    name: 'Punjab Mail Dhaba',
+    rating: 4.5,
+    reviews: 1100,
+    cuisine: 'Punjabi Dhaba • Tandoori',
+    deliveryTime: 25,
+    deliveryTimeString: '20-30 min',
+    priceRange: '₹',
+    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1000&auto=format&fit=crop',
+    featured: false,
+    vegetarian: true,
+    hasOffers: true,
+    isOpenNow: true,
+    location: 'Chowk Bypass, Near Bus Stand',
+    offerDetails: 'Free Lassi on orders above ₹200',
+    about: 'Famous roadside dhaba known for heavy butter rotis, rich dal makhani, and midnight student orders.',
+    vendorType: 'Dhaba',
+    campusProximity: '800m from Campus • Fast Midnight Delivery',
+    fssaiVerified: true,
+    hasSubscriptions: true,
+    menuCategories: ['Dhaba Specials'],
+    menu: [
+      {
+        id: 1501, category: 'Dhaba Specials', name: 'Dal Makhani Combo', price: 85, rating: 4.7,
+        description: 'Slow-cooked black lentils in butter, 3 Tandoori Rotis, Jeera Rice and Chilled Lassi.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Black Gram', 'Butter', 'Cream', 'Spices'],
+        allergens: ['Dairy', 'Gluten'],
+        customizations: []
+      }
+    ],
+    reviewsList: [
+      { id: 1, user: 'Manpreet S.', rating: 5, date: '1 week ago', text: 'Authentic dhaba taste, huge portions!' }
+    ]
+  },
   {
     id: 1,
     name: 'Truffle & Vine',

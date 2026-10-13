@@ -10,6 +10,7 @@ import GlassCard from '../components/GlassCard';
 import { useLocationContext } from '../context/LocationContext';
 
 const CUISINES = ['All', 'Italian', 'Japanese', 'Indian', 'Healthy', 'Pizza', 'Chinese'];
+const VENDOR_TYPES = ['All', 'Tiffin Service', 'Student Mess', 'Home Chef', 'Dhaba', 'Restaurant'];
 const RATINGS = [0, 4.0, 4.5, 4.8];
 const DISTANCES = [
   { label: 'All Distances', maxKm: 99 },
@@ -21,11 +22,13 @@ const DISTANCES = [
 export default function Restaurants() {
   const [searchParams] = useSearchParams();
   const initialCuisine = searchParams.get('cuisine') || 'All';
+  const initialVendorType = searchParams.get('vendorType') || 'All';
   
   const { city, fullAddress, setIsModalOpen, isDetecting, getLocalizedRestaurants } = useLocationContext();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState(initialCuisine);
+  const [selectedVendorType, setSelectedVendorType] = useState(initialVendorType);
   const [minRating, setMinRating] = useState(0);
   const [maxDistance, setMaxDistance] = useState(99);
   const [isVegetarian, setIsVegetarian] = useState(false);
@@ -39,6 +42,11 @@ export default function Restaurants() {
     return localizedRestaurants.filter(restaurant => {
       // Distance filter
       if (restaurant.distanceKm && restaurant.distanceKm > maxDistance) {
+        return false;
+      }
+
+      // Vendor Type
+      if (selectedVendorType !== 'All' && (restaurant.vendorType || 'Restaurant') !== selectedVendorType) {
         return false;
       }
 
@@ -61,7 +69,7 @@ export default function Restaurants() {
 
       return true;
     });
-  }, [searchQuery, selectedCuisine, minRating, maxDistance, isVegetarian, hasOffers, isOpenNow, localizedRestaurants]);
+  }, [searchQuery, selectedCuisine, selectedVendorType, minRating, maxDistance, isVegetarian, hasOffers, isOpenNow, localizedRestaurants]);
 
   const renderFilters = () => (
     <div className="space-y-8">
@@ -80,6 +88,26 @@ export default function Restaurants() {
               }`}
             >
               {d.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Provider Type */}
+      <div>
+        <h3 className="font-bold mb-3 text-white text-sm">Provider Type</h3>
+        <div className="flex flex-wrap gap-2">
+          {VENDOR_TYPES.map(type => (
+            <button
+              key={type}
+              onClick={() => setSelectedVendorType(type)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                selectedVendorType === type 
+                  ? 'bg-aurora-cyan text-[#111111] font-bold shadow-[0_0_12px_rgba(255,184,0,0.35)]' 
+                  : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 border border-white/5'
+              }`}
+            >
+              {type}
             </button>
           ))}
         </div>
@@ -235,6 +263,23 @@ export default function Restaurants() {
 
         {/* Results Grid */}
         <div className="flex-1">
+          {/* Quick Provider Type Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-3 mb-6">
+            {VENDOR_TYPES.map(type => (
+              <button
+                key={type}
+                onClick={() => setSelectedVendorType(type)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  selectedVendorType === type
+                    ? 'bg-aurora-cyan text-[#111111] font-bold shadow-md shadow-aurora-cyan/20 ring-1 ring-aurora-cyan'
+                    : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 border border-white/10'
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+
           {filteredRestaurants.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredRestaurants.map((restaurant, idx) => (
@@ -263,6 +308,7 @@ export default function Restaurants() {
                   variant="primary" 
                   onClick={() => {
                     setMaxDistance(99);
+                    setSelectedVendorType('All');
                     setSelectedCuisine('All');
                     setMinRating(0);
                     setIsVegetarian(false);
