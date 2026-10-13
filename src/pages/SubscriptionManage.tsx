@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   Calendar, PauseCircle, PlayCircle, 
   MapPin, Clock, AlertCircle, ArrowLeft,
-  Utensils, Moon, Sun, Check, Sparkles, Phone, MessageSquare, Printer
+  Utensils, Moon, Sun, Check, Sparkles, Phone, MessageSquare, Printer, Navigation
 } from 'lucide-react';
 import { useSubscriptions } from '../context/SubscriptionContext';
 import GlassCard from '../components/GlassCard';
@@ -171,6 +171,51 @@ export default function SubscriptionManage() {
               className="h-full bg-gradient-to-r from-aurora-cyan to-aurora-blue rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, (activeSubscription.consumedDays / activeSubscription.totalDays) * 100)}%` }}
             />
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* Today's Live Tiffin Dispatch & Route Tracker Card */}
+      <GlassCard className="p-6 border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-background to-aurora-cyan/10 mb-8 relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+              <Utensils size={24} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  Today's Meal Dispatch Live
+                </span>
+                <span className="text-xs text-slate-400 font-mono">
+                  {new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white">
+                Lunch Thali: Out for Campus Delivery
+              </h3>
+              <p className="text-xs text-slate-300 mt-0.5">
+                Rider dispatched from {activeSubscription.vendorName} • Expected at Hostel Gate in ~15 mins (12:45 PM slot)
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right pr-2">
+              <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Gate Handover OTP</p>
+              <p className="text-xl font-black text-aurora-cyan font-mono tracking-wider">#5812</p>
+            </div>
+
+            <Link to="/tracking/ORD-TIFFIN-TODAY">
+              <Button
+                variant="primary"
+                size="sm"
+                leftIcon={<Navigation size={15} className="animate-pulse" />}
+                className="shadow-[0_0_15px_rgba(34,211,238,0.3)] whitespace-nowrap font-bold"
+              >
+                Track Live Delivery Map
+              </Button>
+            </Link>
           </div>
         </div>
       </GlassCard>

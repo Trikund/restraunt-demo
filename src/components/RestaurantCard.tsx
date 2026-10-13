@@ -1,10 +1,11 @@
-import { Heart, Clock, Tag, MapPin, GraduationCap } from 'lucide-react';
+import { Heart, Clock, Tag, MapPin, GraduationCap, Moon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GlassCard from './GlassCard';
 import Rating from './Rating';
 import Badge from './Badge';
 import VendorTypeBadge from './VendorTypeBadge';
 import type { VendorArchetype } from './VendorTypeBadge';
+import StudentTrustMatrix, { type StudentTrustScore } from './StudentTrustMatrix';
 import { useWishlist } from '../context/WishlistContext';
 
 export interface RestaurantProps {
@@ -25,6 +26,9 @@ export interface RestaurantProps {
     vendorType?: VendorArchetype;
     campusProximity?: string;
     hasSubscriptions?: boolean;
+    isLateNightCanteen?: boolean;
+    lateNightHours?: string;
+    studentTrustScore?: StudentTrustScore;
   };
 }
 
@@ -50,6 +54,12 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 items-start">
             {restaurant.vendorType && restaurant.vendorType !== 'Restaurant' && (
               <VendorTypeBadge type={restaurant.vendorType} />
+            )}
+            {restaurant.isLateNightCanteen && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-900/90 backdrop-blur-md text-purple-200 border border-purple-400/40 inline-flex items-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+                <Moon size={10} className="fill-current text-purple-300" />
+                Late-Night
+              </span>
             )}
             {restaurant.featured && (
               <Badge variant="aurora">Featured</Badge>
@@ -95,11 +105,17 @@ export default function RestaurantCard({ restaurant }: RestaurantProps) {
           </div>
           
           {restaurant.campusProximity && (
-            <div className="mb-3">
+            <div className="mb-2.5">
               <span className="text-[11px] font-medium text-aurora-cyan bg-aurora-cyan/10 border border-aurora-cyan/20 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                 <GraduationCap size={12} className="shrink-0" />
                 {restaurant.campusProximity}
               </span>
+            </div>
+          )}
+
+          {restaurant.studentTrustScore && (
+            <div className="mb-3">
+              <StudentTrustMatrix score={restaurant.studentTrustScore} compact />
             </div>
           )}
           

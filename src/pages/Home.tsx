@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, ChefHat, MapPin, CalendarDays, Check } from 'lucide-react';
+import { ArrowRight, Sparkles, ChefHat, MapPin, CalendarDays, Check, Moon } from 'lucide-react';
 import SectionHeading from '../components/SectionHeading';
 import Button from '../components/Button';
 import RestaurantCard from '../components/RestaurantCard';
@@ -212,6 +212,35 @@ export default function Home() {
                 <span className="text-xs font-bold text-aurora-cyan">Maa Annapurna Tiffin Center</span>
                 <p className="text-[11px] text-slate-300">4 Phulka + Seasonal Sabzi + Dal + Rice • ₹999/week</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* EXAM NIGHT / MIDNIGHT CANTEEN SPOTLIGHT */}
+        <section className="relative overflow-hidden rounded-[2.5rem] border border-purple-500/30 bg-gradient-to-r from-purple-950/60 via-indigo-950/60 to-background p-8 md:p-10 shadow-2xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="space-y-3 max-w-xl text-left">
+              <span className="inline-flex items-center gap-1.5 py-1 px-3.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 text-xs font-bold uppercase tracking-wider">
+                <Moon size={14} className="fill-current text-amber-300" /> Exam Week Lifeline
+              </span>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                Exam Night Canteens & <span className="text-purple-400">Midnight Maggi</span>
+              </h2>
+              <p className="text-xs md:text-sm text-purple-200/80 leading-relaxed">
+                Studying for midterms or endterms? Order hot butter Maggi, cutting chai, rolls, and cold coffee from campus dhabas open till 4:30 AM with express 15-minute hostel gate delivery.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <Button
+                variant="primary"
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 border-none shadow-[0_0_20px_rgba(168,85,247,0.4)] text-white font-bold"
+                rightIcon={<ArrowRight size={18} />}
+                onClick={() => navigate('/restaurants?midnight=true')}
+              >
+                Open Midnight Canteen
+              </Button>
             </div>
           </div>
         </section>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Home, Briefcase, Navigation, Plus, 
+  Home, Briefcase, Navigation, 
   CreditCard, Smartphone, Wallet, Banknote, 
   CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck,
   Clock, Store, Users, Printer
@@ -19,10 +19,55 @@ import InvoiceModal from '../components/InvoiceModal';
 
 const STEPS = ['Address', 'Summary', 'Payment', 'Confirmation'];
 
-const ADDRESSES = [
-  { id: 'home', type: 'Home', icon: Home, address: '124 Culinary Avenue, Floor 4, Food District' },
-  { id: 'work', type: 'Work', icon: Briefcase, address: '88 Tech Park, Building C, Innovation Sector' },
-  { id: 'other', type: 'Other', icon: Navigation, address: '45 Sunset Boulevard, Apt 12B' },
+const CAMPUS_HUBS = [
+  { 
+    id: 'boys_hostel_b', 
+    type: 'Boys Hostel Block B', 
+    tag: 'Popular Hub', 
+    icon: Home, 
+    hub: 'Main Lobby & Security Guard Desk', 
+    address: 'Boys Hostel Block B, West Wing Portico, University Campus' 
+  },
+  { 
+    id: 'girls_hostel_gate', 
+    type: 'Girls Hostel Gate 1', 
+    tag: 'Security Hub', 
+    icon: ShieldCheck, 
+    hub: 'Security Porch & Waiting Area', 
+    address: 'Girls Hostel Complex, Gate 1 Security Kiosk, University Campus' 
+  },
+  { 
+    id: 'boys_hostel_a', 
+    type: 'Boys Hostel Block A', 
+    tag: 'Direct Gate', 
+    icon: Home, 
+    hub: 'Ground Floor Foyer & Waiting Area', 
+    address: 'Boys Hostel Block A, Main Entrance, University Campus' 
+  },
+  { 
+    id: 'library_portico', 
+    type: 'Central Library Porch', 
+    tag: 'Midnight Study Spot', 
+    icon: Navigation, 
+    hub: 'Entrance Steps & Bicycle Stand', 
+    address: 'Central Campus Library, Main Portico, University Campus' 
+  },
+  { 
+    id: 'campus_main_gate', 
+    type: 'Main Campus Gate 1', 
+    tag: 'Campus Entry', 
+    icon: Briefcase, 
+    hub: 'Security Gate 1 & Visitor Desk', 
+    address: 'Main University Road, Gate 1 Drop-off' 
+  },
+  { 
+    id: 'off_campus_pg', 
+    type: 'Off-Campus Student PG', 
+    tag: 'Doorstep', 
+    icon: Navigation, 
+    hub: 'Street 4 / Main Door', 
+    address: 'Premnagar Student Colony, Lane 3' 
+  },
 ];
 
 const PAYMENT_METHODS = [
@@ -37,7 +82,12 @@ export default function Checkout() {
   const navigate = useNavigate();
   
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedAddress, setSelectedAddress] = useState('home');
+  const [selectedAddress, setSelectedAddress] = useState('boys_hostel_b');
+  const [roomDetails, setRoomDetails] = useState('Room 304, 3rd Floor');
+  const [deliveryInstructions, setDeliveryInstructions] = useState<string[]>([
+    'Call on arrival at hostel gate',
+    'Leave with hostel security guard'
+  ]);
   const [selectedPayment, setSelectedPayment] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId, setOrderId] = useState('');
@@ -63,7 +113,8 @@ export default function Checkout() {
   const { createOrder } = useOrders();
 
   const createFinalOrder = (payId?: string) => {
-    const addr = ADDRESSES.find(a => a.id === selectedAddress) || ADDRESSES[0];
+    const hub = CAMPUS_HUBS.find(a => a.id === selectedAddress) || CAMPUS_HUBS[0];
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
     
     // Create mock order
     const newOrder = createOrder({
@@ -89,18 +140,22 @@ export default function Checkout() {
       totalAmount: total,
       paymentMethod: selectedPayment,
       paymentStatus: 'COMPLETED',
+      hostelDropOffHub: hub.type,
+      hostelRoomDetails: roomDetails,
+      hostelInstructions: deliveryInstructions,
+      deliveryOtp: generatedOtp,
       deliveryAddress: {
-        label: addr.type,
+        label: hub.type,
         name: currentUser.name,
         phone: currentUser.phone,
-        addressLine: addr.address,
+        addressLine: `${hub.type} (${roomDetails}), ${hub.address}`,
         city: 'Dehradun',
         state: 'Uttarakhand',
         pincode: '248001'
       },
       deliveryLatitude: 28.6200,
       deliveryLongitude: 77.2200,
-      estimatedDeliveryTime: '35 mins'
+      estimatedDeliveryTime: '25-35 mins'
     });
     
     setOrderId(newOrder.orderId);
@@ -184,7 +239,7 @@ export default function Checkout() {
       <div className="max-w-4xl mx-auto w-full flex-1">
         <AnimatePresence mode="wait">
           
-          {/* STEP 1: ADDRESS */}
+          {/* STEP 1: CAMPUS DROP-OFF HUB */}
           {currentStep === 1 && (
             <motion.div
               key="step1"
@@ -193,51 +248,135 @@ export default function Checkout() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <SectionHeading title="Delivery Address" subtitle="Where should we deliver your food?" />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <SectionHeading 
+                  title="Campus Drop-off Hub" 
+                  subtitle="Select your hostel gate or designated campus delivery point" 
+                  className="mb-0"
+                />
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-aurora-cyan/10 border border-aurora-cyan/30 text-aurora-cyan inline-flex items-center gap-1 self-start sm:self-auto">
+                  <ShieldCheck size={12} /> Geofenced Campus Drop-off
+                </span>
+              </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {ADDRESSES.map((addr) => (
+                {CAMPUS_HUBS.map((addr) => (
                   <GlassCard 
                     key={addr.id}
                     hoverable
-                    className={`p-6 cursor-pointer border transition-all duration-300 ${
+                    className={`p-5 cursor-pointer border transition-all duration-300 relative ${
                       selectedAddress === addr.id 
                         ? 'border-aurora-cyan bg-aurora-cyan/5 shadow-[0_0_20px_rgba(34,211,238,0.15)]' 
                         : 'border-white/5 bg-background/50 hover:bg-white/5'
                     }`}
                     onClick={() => setSelectedAddress(addr.id)}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-                        selectedAddress === addr.id ? 'bg-aurora-cyan text-background' : 'bg-white/5 text-slate-400'
+                    <div className="flex items-start gap-3.5">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        selectedAddress === addr.id ? 'bg-aurora-cyan text-background font-bold' : 'bg-white/5 text-slate-400'
                       }`}>
                         <addr.icon size={20} />
                       </div>
-                      <div>
-                        <h4 className="font-bold text-white mb-1">{addr.type}</h4>
-                        <p className="text-sm text-slate-400 leading-relaxed">{addr.address}</p>
+                      <div className="flex-1 min-w-0 pr-6">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-bold text-white text-sm truncate">{addr.type}</h4>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/10 text-slate-300">
+                            {addr.tag}
+                          </span>
+                        </div>
+                        <p className="text-xs text-aurora-cyan font-medium mb-0.5">{addr.hub}</p>
+                        <p className="text-[11px] text-slate-400 leading-relaxed truncate">{addr.address}</p>
                       </div>
                     </div>
                     {selectedAddress === addr.id && (
                       <div className="absolute top-4 right-4 text-aurora-cyan">
-                        <CheckCircle2 size={20} fill="currentColor" className="text-background" />
+                        <CheckCircle2 size={18} fill="currentColor" className="text-background" />
                       </div>
                     )}
                   </GlassCard>
                 ))}
-                
-                <GlassCard 
-                  hoverable
-                  className="p-6 cursor-pointer border-white/5 border-dashed bg-transparent hover:bg-white/5 flex flex-col items-center justify-center text-center h-full min-h-[140px]"
-                >
-                  <Plus size={24} className="text-slate-400 mb-2" />
-                  <p className="font-medium text-slate-300">Add New Address</p>
-                </GlassCard>
               </div>
 
-              <div className="flex justify-end pt-8">
+              {/* Room & Floor Details */}
+              <GlassCard className="p-5 bg-white/5 border-white/10 space-y-4">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+                  <Home size={16} className="text-aurora-cyan" />
+                  <h4 className="text-sm font-bold text-white">Room Number & Floor Specification</h4>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                      Hostel Room / Wing Details
+                    </label>
+                    <input
+                      type="text"
+                      value={roomDetails}
+                      onChange={(e) => setRoomDetails(e.target.value)}
+                      placeholder="e.g., Room 304, 3rd Floor, West Wing"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:border-aurora-cyan focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                      Contact for Gate Handover
+                    </label>
+                    <input
+                      type="text"
+                      defaultValue={currentUser.phone}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:border-aurora-cyan focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Hostel Drop-off Instructions */}
+                <div className="pt-2">
+                  <label className="text-xs font-semibold text-slate-300 block mb-2">
+                    Hostel Rider Handover Protocols
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      'Call on arrival at hostel gate',
+                      'Leave with hostel security guard',
+                      'Silent delivery (Roommate sleeping / studying)',
+                      'Meet at central porch steps'
+                    ].map((instruction) => {
+                      const isSelected = deliveryInstructions.includes(instruction);
+                      return (
+                        <button
+                          key={instruction}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setDeliveryInstructions(deliveryInstructions.filter(i => i !== instruction));
+                            } else {
+                              setDeliveryInstructions([...deliveryInstructions, instruction]);
+                            }
+                          }}
+                          className={`px-3 py-2 rounded-xl text-xs font-medium text-left flex items-center gap-2 border transition-all ${
+                            isSelected
+                              ? 'bg-aurora-cyan/15 border-aurora-cyan/40 text-aurora-cyan font-bold'
+                              : 'bg-black/20 border-white/5 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                            isSelected ? 'bg-aurora-cyan border-aurora-cyan text-black' : 'border-white/20'
+                          }`}>
+                            {isSelected && <CheckCircle2 size={12} />}
+                          </div>
+                          <span className="truncate">{instruction}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </GlassCard>
+
+              <div className="flex justify-end pt-4">
                 <Button variant="primary" size="lg" rightIcon={<ArrowRight size={18} />} onClick={nextStep}>
-                  Deliver Here
+                  Confirm Drop-off Hub
                 </Button>
               </div>
             </motion.div>
@@ -433,7 +572,7 @@ export default function Checkout() {
                   Your payment was successful and your order has been sent to the restaurant.
                 </p>
                 
-                <div className="grid grid-cols-2 gap-4 text-left bg-white/5 p-6 rounded-2xl mb-8">
+                <div className="grid grid-cols-2 gap-4 text-left bg-white/5 p-6 rounded-2xl mb-6">
                   <div>
                     <p className="text-xs text-slate-500 mb-1">Order ID</p>
                     <p className="font-bold text-white font-mono">{orderId}</p>
@@ -443,14 +582,23 @@ export default function Checkout() {
                     <p className="font-bold text-aurora-cyan">₹{total.toFixed(2)}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 mb-1">Restaurant</p>
-                    <p className="font-bold text-white flex items-center gap-1.5 truncate"><Store size={14} className="text-muted" /> {mainRestaurant}</p>
+                    <p className="text-xs text-slate-500 mb-1">Campus Drop-off</p>
+                    <p className="font-bold text-white flex items-center gap-1.5 truncate"><Store size={14} className="text-muted" /> {placedOrder?.hostelDropOffHub || mainRestaurant}</p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 mb-1">Est. Delivery</p>
-                    <p className="font-bold text-white flex items-center gap-1.5"><Clock size={14} className="text-muted" /> 35 mins</p>
+                    <p className="font-bold text-white flex items-center gap-1.5"><Clock size={14} className="text-muted" /> 25-35 mins</p>
                   </div>
                 </div>
+
+                {/* Gate Handover OTP Badge */}
+                {placedOrder?.deliveryOtp && (
+                  <div className="mb-8 p-4 rounded-xl bg-aurora-cyan/10 border border-aurora-cyan/30 text-center">
+                    <p className="text-xs text-slate-300 mb-1 font-semibold">Hostel Gate Handover OTP</p>
+                    <p className="text-3xl font-black tracking-widest text-aurora-cyan font-mono">{placedOrder.deliveryOtp}</p>
+                    <p className="text-[11px] text-slate-400 mt-1">Share this 4-digit OTP with your rider at the hostel gate for secure collection</p>
+                  </div>
+                )}
                 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button variant="primary" size="lg" className="px-6 shadow-[0_0_20px_rgba(34,211,238,0.2)]" onClick={() => navigate(`/tracking/${orderId}`)}>

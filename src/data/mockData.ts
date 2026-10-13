@@ -78,6 +78,13 @@ export interface Restaurant {
   fssaiVerified?: boolean;
   hasSubscriptions?: boolean;
   weeklySchedule?: WeeklySchedule;
+  isLateNightCanteen?: boolean;
+  lateNightHours?: string;
+  studentTrustScore?: {
+    gharJaisaRating: number;
+    rotiFreshnessRating: number;
+    portionQuantityPercent: number;
+  };
 }
 
 export const restaurants: Restaurant[] = [
@@ -102,6 +109,11 @@ export const restaurants: Restaurant[] = [
     campusProximity: '400m from Campus Gate • Free Hostel Delivery',
     fssaiVerified: true,
     hasSubscriptions: true,
+    studentTrustScore: {
+      gharJaisaRating: 98,
+      rotiFreshnessRating: 4.9,
+      portionQuantityPercent: 96
+    },
     menuCategories: ['Special Thali', 'Daily Tiffin', 'Breads & Rice'],
     menu: [
       {
@@ -154,6 +166,13 @@ export const restaurants: Restaurant[] = [
     campusProximity: '600m from College • Doorstep Delivery',
     fssaiVerified: true,
     hasSubscriptions: true,
+    isLateNightCanteen: true,
+    lateNightHours: '10:30 PM - 3:30 AM',
+    studentTrustScore: {
+      gharJaisaRating: 92,
+      rotiFreshnessRating: 4.7,
+      portionQuantityPercent: 99
+    },
     menuCategories: ['Mess Specials', 'Parathas'],
     menu: [
       {
@@ -198,6 +217,11 @@ export const restaurants: Restaurant[] = [
     campusProximity: '1.2 km from Campus • Insulated Box Delivery',
     fssaiVerified: true,
     hasSubscriptions: true,
+    studentTrustScore: {
+      gharJaisaRating: 99,
+      rotiFreshnessRating: 4.9,
+      portionQuantityPercent: 92
+    },
     menuCategories: ['Home Chef Specials'],
     menu: [
       {
@@ -227,6 +251,8 @@ export const restaurants: Restaurant[] = [
     vegetarian: true,
     hasOffers: true,
     isOpenNow: true,
+    isLateNightCanteen: true,
+    lateNightHours: '11:00 PM - 4:00 AM',
     location: 'Chowk Bypass, Near Bus Stand',
     offerDetails: 'Free Lassi on orders above ₹200',
     about: 'Famous roadside dhaba known for heavy butter rotis, rich dal makhani, and midnight student orders.',
@@ -234,6 +260,11 @@ export const restaurants: Restaurant[] = [
     campusProximity: '800m from Campus • Fast Midnight Delivery',
     fssaiVerified: true,
     hasSubscriptions: true,
+    studentTrustScore: {
+      gharJaisaRating: 90,
+      rotiFreshnessRating: 4.6,
+      portionQuantityPercent: 98
+    },
     menuCategories: ['Dhaba Specials'],
     menu: [
       {
@@ -247,6 +278,65 @@ export const restaurants: Restaurant[] = [
     ],
     reviewsList: [
       { id: 1, user: 'Manpreet S.', rating: 5, date: '1 week ago', text: 'Authentic dhaba taste, huge portions!' }
+    ]
+  },
+  {
+    id: 106,
+    name: 'Night Owl Campus Canteen',
+    rating: 4.8,
+    reviews: 1450,
+    cuisine: 'Midnight Canteen • Maggi & Chai',
+    deliveryTime: 15,
+    deliveryTimeString: '10-15 min',
+    priceRange: '₹',
+    image: 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?q=80&w=1000&auto=format&fit=crop',
+    featured: true,
+    vegetarian: true,
+    hasOffers: true,
+    isOpenNow: true,
+    isLateNightCanteen: true,
+    lateNightHours: '9:00 PM - 4:30 AM',
+    location: 'Hostel Hub, Opposite Central Library Porch',
+    offerDetails: 'Free Extra Cheese on Midnight Maggi',
+    about: 'The ultimate late-night campus lifeline. Serving hot steaming butter Maggi, cutting adrak chai, stuffed parathas, and cold coffee throughout exam night studies.',
+    vendorType: 'Dhaba',
+    campusProximity: '150m from Boys Hostel • 10m Express Delivery',
+    fssaiVerified: true,
+    hasSubscriptions: false,
+    studentTrustScore: {
+      gharJaisaRating: 95,
+      rotiFreshnessRating: 4.8,
+      portionQuantityPercent: 97
+    },
+    menuCategories: ['Midnight Maggi', 'Chai & Beverages', 'Late Night Parathas'],
+    menu: [
+      {
+        id: 1601, category: 'Midnight Maggi', name: 'Double Cheese Butter Maggi', price: 50, rating: 4.9,
+        description: 'Classic 2-minute Maggi tossed with Amul butter, sweet corn, green chilies, and topped with grated processed cheese.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Maggi Noodles', 'Butter', 'Cheese', 'Veggies'],
+        allergens: ['Dairy', 'Gluten'],
+        customizations: []
+      },
+      {
+        id: 1602, category: 'Chai & Beverages', name: 'Kadak Adrak Elaichi Chai (2 Cups)', price: 35, rating: 4.9,
+        description: 'Brewed fresh with crushed ginger and aromatic green cardamom in an insulated spill-proof container.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Milk', 'Tea Leaves', 'Ginger', 'Cardamom'],
+        allergens: ['Dairy'],
+        customizations: []
+      },
+      {
+        id: 1603, category: 'Late Night Parathas', name: 'Midnight Paneer Bhurji Roll', price: 75, rating: 4.8,
+        description: 'Spiced scrambled cottage cheese rolled in a flaky whole wheat paratha with mint chutney and crunchy onions.',
+        vegetarian: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1000&auto=format&fit=crop',
+        ingredients: ['Paneer', 'Wheat Paratha', 'Onions', 'Mint Chutney'],
+        allergens: ['Dairy', 'Gluten'],
+        customizations: []
+      }
+    ],
+    reviewsList: [
+      { id: 1, user: 'Kunal T.', rating: 5, date: 'Yesterday', text: 'Exam week savior! Delivered hot Maggi and Chai to hostel gate in just 12 minutes.' }
     ]
   },
   {

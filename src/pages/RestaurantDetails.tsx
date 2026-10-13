@@ -8,6 +8,7 @@ import Badge from '../components/Badge';
 import Button from '../components/Button';
 import VendorTypeBadge from '../components/VendorTypeBadge';
 import WeeklyMenuModal from '../components/WeeklyMenuModal';
+import StudentTrustMatrix from '../components/StudentTrustMatrix';
 import { useLocationContext } from '../context/LocationContext';
 
 export default function RestaurantDetails() {
@@ -138,6 +139,13 @@ export default function RestaurantDetails() {
                   >
                     View Weekly Schedule
                   </Button>
+                </div>
+              )}
+
+              {/* Student Quality Matrix */}
+              {restaurant.studentTrustScore && (
+                <div className="mt-5">
+                  <StudentTrustMatrix score={restaurant.studentTrustScore} />
                 </div>
               )}
 

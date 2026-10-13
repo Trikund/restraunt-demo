@@ -68,6 +68,10 @@ export interface Order {
   discount: number;
   totalAmount: number;
   specialInstructions?: string;
+  hostelDropOffHub?: string;
+  hostelRoomDetails?: string;
+  hostelInstructions?: string[];
+  deliveryOtp?: string;
   
   // Payment
   paymentMethod: string;

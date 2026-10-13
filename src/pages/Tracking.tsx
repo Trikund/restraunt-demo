@@ -1,14 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Phone, MessageSquare, CheckCircle2, ChefHat, 
-  Package, Navigation, Home, Store, Star, Clock, MapPin, Check
+  Package, Navigation, Home, Store, Star, Clock, MapPin, Check,
+  ShieldCheck, Sparkles
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import DeliveryTrackingMap from '../components/DeliveryTrackingMap';
 import { useOrders } from '../context/OrderContext';
-import { OrderStatus } from '../types/order';
+import { OrderStatus, type Order } from '../types/order';
 import { trackingService } from '../services/trackingService';
 
 // Add the notification dispatch if it exists globally, else we mock it
@@ -41,7 +42,52 @@ export default function Tracking() {
   const [showReview, setShowReview] = useState(false);
   const [showDevControls, setShowDevControls] = useState(false);
   
-  const order = getOrderById(orderId || '');
+  const existingOrder = getOrderById(orderId || '');
+  const tiffinFallbackOrder: Order = {
+    orderId: 'ORD-TIFFIN-TODAY',
+    customerId: 'cust-1',
+    customerName: 'Campus Student',
+    customerPhone: '+91 98765 43210',
+    restaurantId: 101,
+    restaurantName: 'Maa Annapurna Tiffin Center',
+    restaurantAddress: 'Campus Road, Near Boys Hostel Gate',
+    restaurantLatitude: 28.6139,
+    restaurantLongitude: 77.2090,
+    items: [
+      { id: 'tf-1', name: "Today's Special Homestyle Lunch Thali (4 Phulkas, Paneer, Dal, Rice)", price: 75, quantity: 1 }
+    ],
+    subtotal: 75,
+    deliveryFee: 0,
+    tax: 3.75,
+    discount: 0,
+    totalAmount: 78.75,
+    paymentMethod: 'TIFFIN_SUBSCRIPTION',
+    paymentStatus: 'COMPLETED',
+    hostelDropOffHub: 'Boys Hostel Block B',
+    hostelRoomDetails: 'Room 304, 3rd Floor',
+    hostelInstructions: ['Call on arrival at hostel gate', 'Leave with hostel security guard'],
+    deliveryOtp: '5812',
+    deliveryAddress: {
+      label: 'Boys Hostel Block B',
+      name: 'Campus Student',
+      phone: '+91 98765 43210',
+      addressLine: 'Boys Hostel Block B (Room 304), University Campus',
+      city: 'Dehradun',
+      state: 'Uttarakhand',
+      pincode: '248001'
+    },
+    deliveryLatitude: 28.6200,
+    deliveryLongitude: 77.2200,
+    deliveryPartnerId: 'rider-rahul',
+    deliveryPartnerName: 'Campus Courier (Rahul M.)',
+    deliveryPartnerRating: 4.9,
+    orderStatus: OrderStatus.OUT_FOR_DELIVERY,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    estimatedDeliveryTime: '12-15 mins'
+  };
+
+  const order = existingOrder || (orderId === 'ORD-TIFFIN-TODAY' ? tiffinFallbackOrder : undefined);
   const prevStatus = useRef<OrderStatus | null>(null);
 
   const orderStatus = order?.orderStatus;
@@ -142,6 +188,59 @@ export default function Tracking() {
                 <p className="text-sm text-slate-400">Estimated Delivery</p>
                 <p className="text-xl font-bold text-white">{order.estimatedDeliveryTime}</p>
               </div>
+            </div>
+          </GlassCard>
+
+          {/* Campus Gate Delivery Verification Card */}
+          <GlassCard className="p-6 bg-aurora-cyan/5 border-aurora-cyan/30 relative overflow-hidden">
+            <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={18} className="text-aurora-cyan" />
+                <h3 className="font-bold text-white text-sm">Hostel Gate Verification</h3>
+              </div>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-aurora-cyan/20 text-aurora-cyan border border-aurora-cyan/30 flex items-center gap-1">
+                <Sparkles size={10} /> Secure Handover
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-black/40 p-4 rounded-xl border border-white/5">
+              <div>
+                <p className="text-xs text-slate-400">Share OTP with rider at gate:</p>
+                <p className="text-3xl font-black text-aurora-cyan tracking-widest font-mono mt-0.5">
+                  {order.deliveryOtp || '4829'}
+                </p>
+              </div>
+
+              <div className="text-left sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-white/10 w-full sm:w-auto">
+                <p className="text-xs text-slate-400">Rider Proximity:</p>
+                <p className="text-sm font-bold text-emerald-400 flex items-center sm:justify-end gap-1.5 mt-0.5">
+                  <Navigation size={14} className="animate-pulse" />
+                  ~280m from Hostel Gate
+                </p>
+                <p className="text-[10px] text-slate-400">Campus Route: Dhaba ➔ Gate 2 ➔ Drop-off Hub</p>
+              </div>
+            </div>
+
+            {/* Drop-off Point Specification */}
+            <div className="mt-3.5 pt-3 border-t border-white/5 text-xs text-slate-300 space-y-1">
+              <p className="flex items-center gap-1.5 font-semibold text-white">
+                <MapPin size={13} className="text-aurora-cyan shrink-0" />
+                Drop-off Hub: <span className="text-aurora-cyan font-bold">{order.hostelDropOffHub || order.deliveryAddress?.label || 'Hostel Block Drop-off'}</span>
+              </p>
+              {order.hostelRoomDetails && (
+                <p className="text-slate-400 pl-5">
+                  Room / Floor: <span className="text-slate-200 font-medium">{order.hostelRoomDetails}</span>
+                </p>
+              )}
+              {order.hostelInstructions && order.hostelInstructions.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1.5 pl-5">
+                  {order.hostelInstructions.map((inst, i) => (
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-md bg-white/10 text-slate-300">
+                      ✓ {inst}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </GlassCard>
 

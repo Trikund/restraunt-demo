@@ -9,6 +9,7 @@ import MockRoleSwitcher from './MockRoleSwitcher';
 const navLinks = [
   { name: 'Home', path: '/', icon: Home },
   { name: 'Tiffin Plans', path: '/subscriptions', icon: CalendarDays },
+  { name: 'Exam Night 🌙', path: '/restaurants?midnight=true', icon: Moon },
   { name: 'Menu', path: '/explore', icon: UtensilsCrossed },
   { name: 'Restaurants', path: '/restaurants', icon: Store },
   { name: 'Offers', path: '/offers', icon: Tag },
