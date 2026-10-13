@@ -30,36 +30,37 @@ export default function Footer() {
           <div>
             <h4 className="text-foreground font-bold mb-4">Discover</h4>
             <ul className="space-y-3 text-sm text-muted">
-              <li><Link to="/explore" className="hover:text-aurora-cyan transition-colors">Explore</Link></li>
-              <li><Link to="/restaurants" className="hover:text-aurora-cyan transition-colors">Restaurants</Link></li>
-              <li><Link to="/recipes" className="hover:text-aurora-cyan transition-colors">Recipes</Link></li>
-              <li><Link to="/offers" className="hover:text-aurora-cyan transition-colors">Special Offers</Link></li>
+              <li><Link to="/subscriptions" className="hover:text-aurora-cyan transition-colors font-medium">🍱 Tiffin & Meal Plans</Link></li>
+              <li><Link to="/restaurants" className="hover:text-aurora-cyan transition-colors">Campus Messes & Dhabas</Link></li>
+              <li><Link to="/explore" className="hover:text-aurora-cyan transition-colors">Explore All Food</Link></li>
+              <li><Link to="/offers" className="hover:text-aurora-cyan transition-colors">Student Discounts</Link></li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-foreground font-bold mb-4">Legal</h4>
+            <h4 className="text-foreground font-bold mb-4">Portals & Operations</h4>
             <ul className="space-y-3 text-sm text-muted">
-              <li><Link to="/terms" className="hover:text-aurora-cyan transition-colors">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="hover:text-aurora-cyan transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/cookies" className="hover:text-aurora-cyan transition-colors">Cookie Policy</Link></li>
+              <li><Link to="/subscriptions/manage" className="hover:text-aurora-cyan transition-colors">Student Meal Punch-Card</Link></li>
+              <li><Link to="/restaurant/dashboard" className="hover:text-aurora-cyan transition-colors font-medium">B2B Vendor Dispatch Portal</Link></li>
+              <li><Link to="/about" className="hover:text-aurora-cyan transition-colors">System Architecture</Link></li>
+              <li><Link to="/contact" className="hover:text-aurora-cyan transition-colors">Campus Coordinator</Link></li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-foreground font-bold mb-4">Contact</h4>
+            <h4 className="text-foreground font-bold mb-4">Contact & Node</h4>
             <ul className="space-y-3 text-sm text-muted">
-              <li>Support: help@aurorafood.com</li>
-              <li>Partners: partners@aurorafood.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
+              <li>Hostel Node: Premnagar Campus Hub</li>
+              <li>Support: support@aurorafood.in</li>
+              <li>Emergency: +91 98765 43210</li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-glass-border pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-muted text-sm">&copy; {new Date().getFullYear()} AuroraFood. Premium Dining Experiences.</p>
+          <p className="text-muted text-sm">&copy; {new Date().getFullYear()} AuroraFood. AI-Powered Local Food Subscription & Delivery Platform.</p>
           <div className="flex items-center gap-4 text-sm text-muted">
-            <span>Powered by AuroraGlass</span>
+            <span>Powered by AuroraGlass Engine</span>
           </div>
         </div>
       </div>
