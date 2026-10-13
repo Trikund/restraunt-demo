@@ -5,7 +5,7 @@ import {
   Home, Briefcase, Navigation, Plus, 
   CreditCard, Smartphone, Wallet, Banknote, 
   CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck,
-  Clock, Store
+  Clock, Store, Users, Printer
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +13,9 @@ import { useOrders } from '../context/OrderContext';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import SectionHeading from '../components/SectionHeading';
+import RazorpayModal from '../components/RazorpayModal';
+import SplitBillCalculator from '../components/SplitBillCalculator';
+import InvoiceModal from '../components/InvoiceModal';
 
 const STEPS = ['Address', 'Summary', 'Payment', 'Confirmation'];
 
@@ -38,6 +41,11 @@ export default function Checkout() {
   const [selectedPayment, setSelectedPayment] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [isSplitBillOpen, setIsSplitBillOpen] = useState(false);
+  const [isRazorpayOpen, setIsRazorpayOpen] = useState(false);
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
+  const [paymentId, setPaymentId] = useState('');
+  const [placedOrder, setPlacedOrder] = useState<any>(null);
 
   // Fixed values for simulation
   const deliveryFee = items.length > 0 ? 3.99 : 0;
@@ -54,57 +62,72 @@ export default function Checkout() {
   const { currentUser } = useAuth();
   const { createOrder } = useOrders();
 
-  const handlePayment = () => {
-    setIsProcessing(true);
+  const createFinalOrder = (payId?: string) => {
+    const addr = ADDRESSES.find(a => a.id === selectedAddress) || ADDRESSES[0];
     
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      
-      const addr = ADDRESSES.find(a => a.id === selectedAddress) || ADDRESSES[0];
-      
-      // Create mock order
-      const newOrder = createOrder({
-        customerId: currentUser.id,
-        customerName: currentUser.name,
-        customerPhone: currentUser.phone,
-        restaurantId: items.length > 0 ? (items[0] as any).restaurantId || 1 : 1, // Fallback to 1
-        restaurantName: items.length > 0 ? (items[0] as any).restaurant || 'Truffle & Vine' : 'Truffle & Vine',
-        restaurantAddress: '123 Gourmet Lane, Culinary District',
-        restaurantLatitude: 28.6139,
-        restaurantLongitude: 77.2090,
-        items: items.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image
-        })),
-        subtotal,
-        deliveryFee,
-        tax: taxes,
-        discount: 0,
-        totalAmount: total,
-        paymentMethod: selectedPayment,
-        paymentStatus: 'COMPLETED',
-        deliveryAddress: {
-          label: addr.type,
-          name: currentUser.name,
-          phone: currentUser.phone,
-          addressLine: addr.address,
-          city: 'Dehradun',
-          state: 'Uttarakhand',
-          pincode: '248001'
-        },
-        deliveryLatitude: 28.6200,
-        deliveryLongitude: 77.2200,
-        estimatedDeliveryTime: '45 mins'
-      });
-      
-      setOrderId(newOrder.orderId);
-      clearCart();
-      navigate(`/tracking/${newOrder.orderId}`);
-    }, 2500);
+    // Create mock order
+    const newOrder = createOrder({
+      customerId: currentUser.id,
+      customerName: currentUser.name,
+      customerPhone: currentUser.phone,
+      restaurantId: items.length > 0 ? (items[0] as any).restaurantId || 1 : 1,
+      restaurantName: items.length > 0 ? (items[0] as any).restaurant || 'FlavorNest Local' : 'FlavorNest Local',
+      restaurantAddress: '123 Gourmet Lane, Culinary District',
+      restaurantLatitude: 28.6139,
+      restaurantLongitude: 77.2090,
+      items: items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image
+      })),
+      subtotal,
+      deliveryFee,
+      tax: taxes,
+      discount: 0,
+      totalAmount: total,
+      paymentMethod: selectedPayment,
+      paymentStatus: 'COMPLETED',
+      deliveryAddress: {
+        label: addr.type,
+        name: currentUser.name,
+        phone: currentUser.phone,
+        addressLine: addr.address,
+        city: 'Dehradun',
+        state: 'Uttarakhand',
+        pincode: '248001'
+      },
+      deliveryLatitude: 28.6200,
+      deliveryLongitude: 77.2200,
+      estimatedDeliveryTime: '35 mins'
+    });
+    
+    setOrderId(newOrder.orderId);
+    setPlacedOrder({
+      ...newOrder,
+      paymentId: payId || `pay_${Date.now()}`
+    });
+    clearCart();
+    setCurrentStep(4);
+  };
+
+  const handlePayment = () => {
+    if (selectedPayment === 'cod') {
+      setIsProcessing(true);
+      setTimeout(() => {
+        setIsProcessing(false);
+        createFinalOrder();
+      }, 1500);
+    } else {
+      setIsRazorpayOpen(true);
+    }
+  };
+
+  const handleRazorpaySuccess = (payId: string) => {
+    setIsRazorpayOpen(false);
+    setPaymentId(payId);
+    createFinalOrder(payId);
   };
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 4));
@@ -284,6 +307,25 @@ export default function Checkout() {
                     <Button variant="primary" size="lg" fullWidth onClick={nextStep} className="shadow-[0_0_20px_rgba(34,211,238,0.2)]">
                       Continue to Payment
                     </Button>
+
+                    {/* Roommate Bill Split Option */}
+                    <div className="mt-4 pt-4 border-t border-white/10">
+                      <button
+                        type="button"
+                        onClick={() => setIsSplitBillOpen(!isSplitBillOpen)}
+                        className="w-full text-xs font-bold text-aurora-purple hover:text-purple-300 py-2 px-3 rounded-xl bg-aurora-purple/10 border border-aurora-purple/20 flex items-center justify-between transition-colors cursor-pointer"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <Users size={14} /> Split Bill with Roommates?
+                        </span>
+                        <span>{isSplitBillOpen ? '▲ Close' : '▼ Calculate'}</span>
+                      </button>
+                      {isSplitBillOpen && (
+                        <div className="mt-3">
+                          <SplitBillCalculator totalAmount={total} />
+                        </div>
+                      )}
+                    </div>
                   </GlassCard>
                 </div>
               </div>
@@ -410,11 +452,20 @@ export default function Checkout() {
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button variant="primary" size="lg" className="px-8 shadow-[0_0_20px_rgba(34,211,238,0.2)]" onClick={() => navigate(`/tracking/${orderId}`)}>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button variant="primary" size="lg" className="px-6 shadow-[0_0_20px_rgba(34,211,238,0.2)]" onClick={() => navigate(`/tracking/${orderId}`)}>
                     Track Order
                   </Button>
-                  <Button variant="ghost" size="lg" className="px-8 bg-white/5 hover:bg-white/10" onClick={() => navigate('/')}>
+                  <Button 
+                    variant="glass" 
+                    size="lg" 
+                    className="px-6 border-white/20 hover:border-aurora-cyan"
+                    leftIcon={<Printer size={16} />}
+                    onClick={() => setIsInvoiceOpen(true)}
+                  >
+                    Official GST Invoice
+                  </Button>
+                  <Button variant="ghost" size="lg" className="px-6 bg-white/5 hover:bg-white/10" onClick={() => navigate('/')}>
                     Continue Exploring
                   </Button>
                 </div>
@@ -424,6 +475,44 @@ export default function Checkout() {
 
         </AnimatePresence>
       </div>
+
+      {/* Razorpay Simulated Gateway */}
+      <RazorpayModal
+        isOpen={isRazorpayOpen}
+        onClose={() => setIsRazorpayOpen(false)}
+        onSuccess={handleRazorpaySuccess}
+        amount={total}
+        orderId={orderId || 'ORD-TXN-PENDING'}
+        merchantName={mainRestaurant}
+      />
+
+      {/* Official Tax Invoice Modal */}
+      {placedOrder && (
+        <InvoiceModal
+          isOpen={isInvoiceOpen}
+          onClose={() => setIsInvoiceOpen(false)}
+          data={{
+            invoiceNumber: `INV-${placedOrder.orderId}`,
+            orderId: placedOrder.orderId,
+            date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+            customerName: currentUser.name,
+            customerPhone: currentUser.phone,
+            deliveryAddress: `${placedOrder.deliveryAddress.addressLine}, ${placedOrder.deliveryAddress.city}`,
+            vendorName: placedOrder.restaurantName,
+            items: placedOrder.items.map((i: any) => ({
+              name: i.name,
+              quantity: i.quantity,
+              price: i.price
+            })),
+            subtotal: placedOrder.subtotal,
+            deliveryFee: placedOrder.deliveryFee,
+            tax: placedOrder.tax,
+            totalAmount: placedOrder.totalAmount,
+            paymentMethod: (placedOrder.paymentMethod || 'UPI').toUpperCase(),
+            paymentId: placedOrder.paymentId || paymentId
+          }}
+        />
+      )}
     </div>
   );
 }

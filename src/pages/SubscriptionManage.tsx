@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { 
   Calendar, PauseCircle, PlayCircle, 
   MapPin, Clock, AlertCircle, ArrowLeft,
-  Utensils, Moon, Sun, Check, Sparkles, Phone, MessageSquare
+  Utensils, Moon, Sun, Check, Sparkles, Phone, MessageSquare, Printer
 } from 'lucide-react';
 import { useSubscriptions } from '../context/SubscriptionContext';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
+import InvoiceModal from '../components/InvoiceModal';
 import type { MealSlot } from '../types/subscription';
 
 export default function SubscriptionManage() {
@@ -24,6 +25,7 @@ export default function SubscriptionManage() {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [addressInput, setAddressInput] = useState(activeSubscription?.deliveryAddress || '');
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
 
   if (!activeSubscription) {
     return (
@@ -141,6 +143,16 @@ export default function SubscriptionManage() {
                 Call Delivery Partner
               </Button>
             </a>
+
+            <Button
+              variant="glass"
+              size="sm"
+              leftIcon={<Printer size={15} className="text-aurora-cyan" />}
+              onClick={() => setIsInvoiceOpen(true)}
+              title="Download official tax receipt for hostel allowance"
+            >
+              Tax Invoice
+            </Button>
           </div>
         </div>
 
@@ -399,6 +411,33 @@ export default function SubscriptionManage() {
         </div>
 
       </div>
+
+      {/* Official Subscription Tax Invoice Modal */}
+      <InvoiceModal
+        isOpen={isInvoiceOpen}
+        onClose={() => setIsInvoiceOpen(false)}
+        data={{
+          invoiceNumber: `INV-${activeSubscription.id.toUpperCase()}`,
+          orderId: activeSubscription.id,
+          date: activeSubscription.startDate,
+          customerName: 'Hostel Resident (Registered Student)',
+          deliveryAddress: activeSubscription.deliveryAddress,
+          vendorName: activeSubscription.vendorName,
+          items: [
+            {
+              name: `${activeSubscription.planTitle} (${activeSubscription.duration.toUpperCase()} RECURRING PLAN)`,
+              quantity: 1,
+              price: activeSubscription.pricePaid
+            }
+          ],
+          subtotal: Math.round(activeSubscription.pricePaid * 0.95),
+          deliveryFee: 0,
+          tax: Math.round(activeSubscription.pricePaid * 0.05),
+          totalAmount: activeSubscription.pricePaid,
+          paymentMethod: 'UPI / ONLINE (VERIFIED)',
+          paymentId: 'pay_sub_razorpay_99214'
+        }}
+      />
     </div>
   );
 }
