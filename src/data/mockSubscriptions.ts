@@ -25,7 +25,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     sampleMenu: {
       lunch: '4 Butter Roti, Dal Tadka, Aloo Gobhi, Jeera Rice, Salad',
       dinner: '4 Tawa Phulka, Mix Veg, Yellow Moong Dal, Pickle'
-    }
+    },
+    macros: { calories: 1250, protein: 42, carbs: 180, fats: 38 }
   },
   {
     id: 'sub_annapurna_3',
@@ -51,7 +52,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
       breakfast: '2 Stuffed Aloo Paratha with Curd & Pickle',
       lunch: '4 Phulka, Paneer Bhurji, Arhar Dal, Basmati Rice',
       dinner: '4 Phulka, Lauki Chana Dal, Seasonal Sabzi'
-    }
+    },
+    macros: { calories: 1850, protein: 58, carbs: 260, fats: 52 }
   },
   {
     id: 'sub_pahadi_mess_1',
@@ -76,7 +78,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     ],
     sampleMenu: {
       dinner: '5 Tawa Roti, Rajma Masala, Steamed Rice, Gulab Jamun (Wed/Sun)'
-    }
+    },
+    macros: { calories: 720, protein: 26, carbs: 110, fats: 18 }
   },
   {
     id: 'sub_sunita_homechef_2',
@@ -102,7 +105,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     sampleMenu: {
       lunch: '4 Ghee Phulka, Panchmel Dal, Bhindi Fry, Steamed Rice',
       dinner: '4 Ghee Phulka, Matar Paneer, Moong Dal Khichdi'
-    }
+    },
+    macros: { calories: 1180, protein: 39, carbs: 165, fats: 32 }
   },
   {
     id: 'sub_fitness_fuel_3',
@@ -128,7 +132,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
       breakfast: '4 Boiled Eggs / Paneer Sprout Bowl + Peanut Butter Toast',
       lunch: '200g Grilled Chicken / Tofu Soya Curry + Brown Rice + Greens',
       dinner: '5 Multigrain Rotis, Chicken Keema / Paneer Bhurji + Dal'
-    }
+    },
+    macros: { calories: 2150, protein: 115, carbs: 210, fats: 48 }
   },
   {
     id: 'sub_punjab_dhaba_2',
@@ -154,7 +159,8 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     sampleMenu: {
       lunch: '4 Butter Rotis, Dal Makhani, Mixed Vegetable, Rice',
       dinner: '4 Butter Rotis, Chana Masala, Jeera Aloo, Raita'
-    }
+    },
+    macros: { calories: 1420, protein: 44, carbs: 195, fats: 48 }
   }
 ];
 

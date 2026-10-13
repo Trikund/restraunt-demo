@@ -2,6 +2,7 @@ import { Plus, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import GlassCard from './GlassCard';
 import Rating from './Rating';
+import NutritionBadge, { type NutritionInfo } from './NutritionBadge';
 import { useWishlist } from '../context/WishlistContext';
 
 interface MenuItemProps {
@@ -13,6 +14,7 @@ interface MenuItemProps {
     rating: number;
     image: string;
     vegetarian: boolean;
+    nutrition?: NutritionInfo;
   };
 }
 
@@ -66,6 +68,12 @@ export default function MenuItemCard({ item }: MenuItemProps) {
              <span className="text-xs text-slate-400">({Math.floor(item.rating * 123)})</span>
              <span className="text-xs text-slate-400 border-l border-slate-700 pl-2">20 min</span>
           </div>
+
+          {item.nutrition && (
+            <div className="mb-2">
+              <NutritionBadge nutrition={item.nutrition} variant="compact" />
+            </div>
+          )}
           
           <div className="flex items-center justify-between mt-auto pt-2">
             <div className="font-bold text-lg text-white group-hover:text-aurora-cyan transition-colors">

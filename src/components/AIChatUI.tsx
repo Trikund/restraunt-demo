@@ -10,11 +10,11 @@ import { allDishes, restaurants } from '../data/mockData';
 import { useCart } from '../context/CartContext';
 
 const SUGGESTED_PROMPTS = [
-  "What should I eat?",
-  "Something spicy under ₹15",
-  "Healthy dinner",
-  "Find me a vegetarian dish",
-  "I have chicken and rice"
+  "Hostel meal under ₹80",
+  "High protein gym diet",
+  "Monthly tiffin subscriptions",
+  "AI Student Budget Planner",
+  "Homestyle Rajma Chawal"
 ];
 
 interface ChatMessage {
@@ -22,6 +22,10 @@ interface ChatMessage {
   sender: 'user' | 'assistant';
   text: string;
   recommendations?: typeof allDishes[0][];
+  actionLink?: {
+    label: string;
+    url: string;
+  };
 }
 
 interface AIChatUIProps {
@@ -40,7 +44,7 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
     {
       id: 'init',
       sender: 'assistant',
-      text: 'Hello! I am Foodie AI. What are you craving today?'
+      text: 'Hello! I am Foodie AI. What are you craving today? You can ask for student meal budgets, tiffin subscriptions, or high-protein options!'
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -70,9 +74,24 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
     setTimeout(() => {
       let aiText = "I found some great options for you!";
       let recs: typeof allDishes[0][] = [];
+      let actionLink: { label: string; url: string } | undefined = undefined;
 
       const lower = text.toLowerCase();
-      if (lower.includes('spicy')) {
+      if (lower.includes('tiffin') || lower.includes('subscript') || lower.includes('monthly') || lower.includes('plan')) {
+        aiText = "Looking for daily meal subscriptions? Check out our verified local tiffin plans starting from ₹549/week. Flexible weekend pauses and room delivery included!";
+        actionLink = { label: 'Explore Tiffin Plans', url: '/subscriptions' };
+        recs = allDishes.filter(d => d.vegetarian).slice(0, 2);
+      } else if (lower.includes('budget') || lower.includes('planner') || lower.includes('calculate') || lower.includes('stipend')) {
+        aiText = "Our AI Student Budget & Meal Planner calculates your exact food costs and matches high-nutrition subscriptions within your budget!";
+        actionLink = { label: 'Open AI Budget Planner', url: '/subscriptions' };
+      } else if (lower.includes('protein') || lower.includes('gym') || lower.includes('muscle')) {
+        aiText = "For fitness and muscle building, here are high-protein items with clean macros:";
+        recs = allDishes.filter(d => d.name.toLowerCase().includes('chicken') || d.name.toLowerCase().includes('paneer') || d.name.toLowerCase().includes('salad')).slice(0, 2);
+        actionLink = { label: 'View High-Protein Subscriptions', url: '/subscriptions' };
+      } else if (lower.includes('under') || lower.includes('80') || lower.includes('100') || lower.includes('cheap') || lower.includes('hostel')) {
+        aiText = "Here are top pocket-friendly dishes perfect for student budgets:";
+        recs = allDishes.filter(d => d.price <= 120 || d.name.toLowerCase().includes('roti') || d.name.toLowerCase().includes('rice')).slice(0, 2);
+      } else if (lower.includes('spicy')) {
         recs = allDishes.filter(d => d.name.toLowerCase().includes('spicy') || d.description.toLowerCase().includes('spicy')).slice(0, 2);
         if (recs.length === 0) recs = allDishes.slice(0, 2); // fallback
       } else if (lower.includes('healthy')) {
@@ -92,7 +111,8 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
           id: createMessageId('bot'),
           sender: 'assistant',
           text: aiText,
-          recommendations: recs
+          recommendations: recs,
+          actionLink
         }
       ]);
       setIsTyping(false);
@@ -164,6 +184,22 @@ export default function AIChatUI({ onClose, isFullScreen = false }: AIChatUIProp
                     : 'bg-white/5 border border-white/10 text-slate-200 rounded-tl-sm'
                 }`}>
                   <p className="text-sm md:text-base leading-relaxed">{msg.text}</p>
+
+                  {msg.actionLink && (
+                    <div className="mt-3 pt-2.5 border-t border-white/10">
+                      <button
+                        onClick={() => {
+                          if (onClose) onClose();
+                          navigate(msg.actionLink!.url);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-aurora-cyan text-[#111111] text-xs font-bold shadow-md hover:bg-aurora-cyan/90 transition-all cursor-pointer"
+                      >
+                        <Sparkles size={12} />
+                        {msg.actionLink.label}
+                        <ArrowRight size={12} />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Recommendations */}

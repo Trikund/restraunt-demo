@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, Heart, Minus, Plus, ShoppingBag, Info, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Star, Heart, Minus, Plus, ShoppingBag, Info, AlertTriangle, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { allDishes, restaurants } from '../data/mockData';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
+import NutritionBadge from '../components/NutritionBadge';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 
@@ -144,6 +145,22 @@ export default function FoodDetails() {
             <p className="text-lg text-slate-300 leading-relaxed mb-8">
               {food.description}
             </p>
+
+            {/* Nutritional Breakdown */}
+            <div className="mb-8">
+              <h3 className="font-semibold text-white flex items-center gap-2 mb-3">
+                <Flame size={16} className="text-amber-400" /> Nutritional Facts & Macros
+              </h3>
+              <NutritionBadge 
+                nutrition={food.nutrition || {
+                  calories: 460,
+                  protein: 20,
+                  carbs: 62,
+                  fats: 14
+                }} 
+                variant="detailed" 
+              />
+            </div>
 
             {/* Ingredients & Allergens */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">

@@ -10,6 +10,13 @@ export interface SkippedMeal {
   reason?: string;
 }
 
+export interface MacroBreakdown {
+  calories: number; // kcal per day/meal
+  protein: number;  // grams
+  carbs: number;    // grams
+  fats: number;     // grams
+}
+
 export interface SubscriptionPlan {
   id: string;
   vendorId: number;
@@ -27,6 +34,7 @@ export interface SubscriptionPlan {
   monthlyPrice: number;
   features: string[];
   sampleMenu: Partial<Record<MealSlot, string>>;
+  macros?: MacroBreakdown;
 }
 
 export interface UserSubscription {

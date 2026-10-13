@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { 
   Calendar, CheckCircle2, ShieldCheck, 
-  MapPin, Clock, ArrowRight, X
+  MapPin, Clock, ArrowRight, X, Sparkles
 } from 'lucide-react';
 import { useSubscriptions } from '../context/SubscriptionContext';
 import { useLocationContext } from '../context/LocationContext';
@@ -10,15 +10,19 @@ import type { SubscriptionPlan, PlanDuration, MealSlot } from '../types/subscrip
 import SubscriptionCard from '../components/SubscriptionCard';
 import Button from '../components/Button';
 import GlassCard from '../components/GlassCard';
+import AIBudgetPlannerModal from '../components/AIBudgetPlannerModal';
 
 export default function Subscriptions() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { plans, activeSubscription, subscribeToPlan } = useSubscriptions();
   const { city, area } = useLocationContext();
 
+  const initialDiet = searchParams.get('dietary') || 'ALL';
   const [selectedFrequency, setSelectedFrequency] = useState<number | 'ALL'>('ALL');
   const [selectedVendorType, setSelectedVendorType] = useState<string>('ALL');
-  const [selectedDiet, setSelectedDiet] = useState<string>('ALL');
+  const [selectedDiet, setSelectedDiet] = useState<string>(initialDiet);
+  const [isBudgetPlannerOpen, setIsBudgetPlannerOpen] = useState(false);
 
   // Modal State for Subscription Confirmation
   const [checkoutModal, setCheckoutModal] = useState<{
@@ -109,6 +113,39 @@ export default function Subscriptions() {
           </GlassCard>
         </div>
       )}
+
+      {/* AI Student Budget Optimizer Banner */}
+      <div className="max-w-5xl mx-auto mb-10">
+        <GlassCard className="p-6 border-aurora-cyan/30 bg-gradient-to-r from-aurora-cyan/15 via-aurora-blue/10 to-transparent relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-xl shadow-aurora-cyan/5">
+          <div className="flex items-start sm:items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-aurora-cyan/20 border border-aurora-cyan/50 text-aurora-cyan flex items-center justify-center shrink-0 shadow-md">
+              <Sparkles size={24} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-aurora-cyan bg-aurora-cyan/20 border border-aurora-cyan/30 px-2 py-0.5 rounded-full">
+                  AI Feature
+                </span>
+                <span className="text-xs text-slate-400">Hostel & PG Student Assistant</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                Calculate & Optimize Your Monthly Meal Budget
+              </h3>
+              <p className="text-xs text-slate-300 mt-1 max-w-xl">
+                Enter your stipend or pocket money and dietary goals (high protein, budget saver, pure veg) to get an automated AI meal plan allocation.
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="primary"
+            onClick={() => setIsBudgetPlannerOpen(true)}
+            rightIcon={<Sparkles size={16} />}
+            className="shrink-0 font-bold shadow-lg shadow-aurora-cyan/20 w-full md:w-auto"
+          >
+            Launch AI Budget Planner
+          </Button>
+        </GlassCard>
+      </div>
 
       {/* Value Pillars */}
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
@@ -278,6 +315,12 @@ export default function Subscriptions() {
           </GlassCard>
         </div>
       )}
+
+      {/* AI Budget Planner Modal */}
+      <AIBudgetPlannerModal 
+        isOpen={isBudgetPlannerOpen} 
+        onClose={() => setIsBudgetPlannerOpen(false)} 
+      />
     </div>
   );
 }

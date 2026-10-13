@@ -4,6 +4,7 @@ import type { SubscriptionPlan, PlanDuration, MealSlot } from '../types/subscrip
 import GlassCard from './GlassCard';
 import Button from './Button';
 import Badge from './Badge';
+import NutritionBadge from './NutritionBadge';
 
 interface Props {
   plan: SubscriptionPlan;
@@ -82,6 +83,13 @@ export default function SubscriptionCard({ plan, onSelect }: Props) {
             );
           })}
         </div>
+
+        {/* Nutrition Macros */}
+        {plan.macros && (
+          <div className="mb-4">
+            <NutritionBadge nutrition={plan.macros} variant="compact" />
+          </div>
+        )}
 
         {/* Duration Switcher */}
         <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 mb-5">

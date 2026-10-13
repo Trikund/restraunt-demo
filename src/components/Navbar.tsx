@@ -85,6 +85,11 @@ export default function Navbar() {
                   }`}
                 >
                   {link.name}
+                  {link.name === 'Tiffin Plans' && (
+                    <span className="ml-1.5 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-aurora-cyan text-[#111111] uppercase tracking-wider shadow-sm">
+                      AI
+                    </span>
+                  )}
                   {isActive && (
                     <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-aurora-cyan" />
                   )}
@@ -221,7 +226,12 @@ export default function Navbar() {
                   }`}
                 >
                   <Icon size={18} />
-                  {link.name}
+                  <span>{link.name}</span>
+                  {link.name === 'Tiffin Plans' && (
+                    <span className="ml-auto text-[9px] font-black px-2 py-0.5 rounded-full bg-aurora-cyan text-[#111111] uppercase tracking-wider shadow-sm">
+                      AI
+                    </span>
+                  )}
                 </Link>
               );
             })}
