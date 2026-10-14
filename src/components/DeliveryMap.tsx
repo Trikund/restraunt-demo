@@ -51,7 +51,7 @@ export default function DeliveryMap({ status, height = 'h-[300px]' }: Props) {
       {/* Mock Route Line */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30">
         <path 
-          d={`M ${pickupPos.x}% ${pickupPos.y}% L ${dropoffPos.x}% ${pickupPos.y}% L ${dropoffPos.x}% ${dropoffPos.y}%`} 
+          d={`M ${PICKUP_POS.x}% ${PICKUP_POS.y}% L ${DROPOFF_POS.x}% ${PICKUP_POS.y}% L ${DROPOFF_POS.x}% ${DROPOFF_POS.y}%`} 
           stroke="url(#route-gradient)" 
           strokeWidth="4" 
           fill="none" 
@@ -68,7 +68,7 @@ export default function DeliveryMap({ status, height = 'h-[300px]' }: Props) {
       {/* Restaurant Marker */}
       <div 
         className="absolute flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 z-10"
-        style={{ left: `${pickupPos.x}%`, top: `${pickupPos.y}%` }}
+        style={{ left: `${PICKUP_POS.x}%`, top: `${PICKUP_POS.y}%` }}
       >
         <div className="w-10 h-10 rounded-full bg-aurora-cyan/20 border border-aurora-cyan text-aurora-cyan flex items-center justify-center shadow-[0_0_15px_rgba(255,184,0,0.3)] backdrop-blur-md">
           <Store size={20} />
@@ -79,7 +79,7 @@ export default function DeliveryMap({ status, height = 'h-[300px]' }: Props) {
       {/* Customer Marker */}
       <div 
         className="absolute flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 z-10"
-        style={{ left: `${dropoffPos.x}%`, top: `${dropoffPos.y}%` }}
+        style={{ left: `${DROPOFF_POS.x}%`, top: `${DROPOFF_POS.y}%` }}
       >
         <div className="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500 text-cyan-500 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.3)] backdrop-blur-md">
           <User size={20} />

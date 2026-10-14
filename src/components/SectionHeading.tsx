@@ -33,15 +33,15 @@ export default function SectionHeading({
       </motion.h2>
       
       {subtitle && (
-        <motion.p 
+        <motion.div 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-muted text-lg max-w-2xl mx-auto"
+          className="text-muted text-base md:text-lg max-w-2xl mx-auto"
         >
           {subtitle}
-        </motion.p>
+        </motion.div>
       )}
     </div>
   );

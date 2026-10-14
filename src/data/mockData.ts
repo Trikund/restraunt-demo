@@ -32,6 +32,14 @@ export interface MenuItem {
   ingredients: string[];
   allergens: string[];
   customizations?: MenuItemCustomization[];
+  nutrition?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+  };
+  restaurant?: string;
+  restaurantId?: number;
 }
 
 export interface ReviewItem {

@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Compass, ChefHat, ShoppingBag, User } from 'lucide-react';
+import { Home, Compass, CalendarDays, ShoppingBag, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 
 const navItems = [
   { name: 'Home', path: '/', icon: Home },
+  { name: 'Tiffins', path: '/subscriptions', icon: CalendarDays },
   { name: 'Explore', path: '/explore', icon: Compass },
-  { name: 'Recipes', path: '/recipes', icon: ChefHat },
   { name: 'Cart', path: '/cart', icon: ShoppingBag },
   { name: 'Profile', path: '/profile', icon: User },
 ];
