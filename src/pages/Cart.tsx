@@ -75,8 +75,8 @@ export default function Cart() {
           
           {/* LEFT: CART ITEMS */}
           <div className="flex-1 space-y-8">
-            {Object.entries(groupedItems).map(([restaurantName, restaurantItems]) => (
-              <GlassCard key={restaurantName} className="overflow-hidden bg-background/40 border-white/10">
+            {Object.entries(groupedItems).map(([restaurantName, restaurantItems], rIdx) => (
+              <GlassCard key={restaurantName || `rest-group-${rIdx}`} className="overflow-hidden bg-background/40 border-white/10">
                 <div className="p-4 bg-white/5 border-b border-glass-border flex items-center gap-2">
                   <Store size={18} className="text-aurora-purple" />
                   <h3 className="font-bold text-white text-lg">{restaurantName}</h3>
