@@ -1,13 +1,13 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pizza, Leaf } from 'lucide-react';
+import { Pizza, Leaf, ArrowLeft } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 export default function AuthLayout() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden selection:bg-aurora-cyan/30">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden selection:bg-aurora-cyan/30 relative">
       {/* LEFT SIDE - VISUAL EXPERIENCE (Hidden on small screens) */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden">
         {/* Animated Aurora Background */}
@@ -35,7 +35,7 @@ export default function AuthLayout() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-500 dark:from-aurora-gold dark:to-food-amber">Extraordinary.</span>
             </h1>
             <p className="text-lg text-slate-600 dark:text-muted-foreground font-medium">
-              Join our premium culinary ecosystem. Discover exclusive menus and world-class chefs delivered directly to your door.
+              Join AuroraFood. Discover student-friendly tiffin plans, hostel midnight cravings, and top campus restaurants delivered right to your door.
             </p>
           </motion.div>
         </div>
@@ -91,16 +91,32 @@ export default function AuthLayout() {
 
       {/* RIGHT SIDE - AUTH PANEL */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative min-h-screen">
+        {/* Desktop Back Button */}
+        <div className="hidden lg:block absolute top-8 right-8 z-20">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/40 hover:bg-slate-900/70 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/20 dark:border-white/10 text-xs font-bold text-slate-200 hover:text-white transition-all backdrop-blur-md shadow-sm"
+          >
+            <ArrowLeft size={15} /> Back to Website
+          </Link>
+        </div>
+
         {/* Mobile background (since left side is hidden) */}
         <div className="absolute inset-0 bg-background z-0 lg:hidden" />
         <div className="absolute inset-0 aurora-bg opacity-30 z-0 lg:hidden" />
         <div className="absolute top-0 right-0 w-full h-full bg-aurora-cyan/10 blur-[100px] lg:hidden z-0" />
         
         <div className="w-full max-w-md relative z-10">
-          {/* Mobile Logo */}
-          <div className="lg:hidden mb-8 text-center">
-            <Link to="/" className="text-4xl font-extrabold aurora-text tracking-tight inline-block">
+          {/* Mobile Header with Logo & Back Button */}
+          <div className="lg:hidden mb-6 flex items-center justify-between">
+            <Link to="/" className="text-2xl font-extrabold aurora-text tracking-tight inline-block">
               AuroraFood
+            </Link>
+            <Link 
+              to="/" 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-slate-300 hover:text-white transition-all"
+            >
+              <ArrowLeft size={14} /> Back
             </Link>
           </div>
 

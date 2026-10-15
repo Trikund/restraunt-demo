@@ -70,16 +70,16 @@ export default function Signup() {
     <GlassCard className="w-full p-8 sm:p-10 bg-white/95 dark:bg-background/40 backdrop-blur-2xl border-slate-200 dark:border-foreground/10 shadow-2xl shadow-slate-200/50 dark:shadow-2xl rounded-3xl">
       <div className="mb-6">
         <h2 className="text-3xl font-extrabold text-slate-900 dark:text-foreground mb-2">Create Account</h2>
-        <p className="text-slate-500 dark:text-muted-foreground font-medium">{step === 1 ? 'Join the premium food ecosystem' : 'Customize your experience'}</p>
+        <p className="text-slate-500 dark:text-muted-foreground font-medium">{step === 1 ? 'Sign up to order delicious food and manage meals' : 'Customize your experience'}</p>
       </div>
 
       {step === 1 ? (
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
           <div className="space-y-4">
-            <Input label="Full Name" placeholder="John Doe" leftIcon={<User size={18} />} value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} error={errors.name} />
+            <Input label="Full Name" placeholder="Enter your full name" leftIcon={<User size={18} />} value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} error={errors.name} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Email" type="email" placeholder="john@example.com" leftIcon={<Mail size={18} />} value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} error={errors.email} />
-              <Input label="Phone" type="tel" placeholder="+1 (555) 000-0000" leftIcon={<Phone size={18} />} value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} error={errors.phone} />
+              <Input label="Email" type="email" placeholder="name@example.com" leftIcon={<Mail size={18} />} value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} error={errors.email} />
+              <Input label="Phone" type="tel" placeholder="Enter mobile number" leftIcon={<Phone size={18} />} value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} error={errors.phone} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input label="Password" type="password" placeholder="••••••••" leftIcon={<Lock size={18} />} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} error={errors.password} />

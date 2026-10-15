@@ -52,7 +52,7 @@ export default function Login() {
           <LogIn size={32} />
         </div>
         <h2 className="text-3xl font-extrabold text-slate-900 dark:text-foreground mb-2">Welcome Back</h2>
-        <p className="text-slate-500 dark:text-muted-foreground font-medium">Sign in to continue your culinary journey</p>
+        <p className="text-slate-500 dark:text-muted-foreground font-medium">Sign in to access your orders, tiffins, and saved dishes</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
