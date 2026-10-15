@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Phone, Check, UserPlus } from 'lucide-react';
+import { Mail, Lock, User, Phone, Check, UserPlus, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -176,6 +176,11 @@ export default function Signup() {
               Sign in
             </Link>
           </p>
+
+          <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+            <ShieldCheck size={14} className="text-emerald-400" />
+            <span>100% Verified Campus & Student Dining</span>
+          </div>
         </motion.div>
       ) : (
         <motion.form initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} onSubmit={handleSubmit} className="space-y-5">

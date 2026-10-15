@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Sparkles, Utensils, Clock3, ShieldCheck, Flame, Compass } from 'lucide-react';
+import { ArrowLeft, Utensils, Compass } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 export default function AuthLayout() {
@@ -68,90 +68,14 @@ export default function AuthLayout() {
         </div>
       </header>
 
-      {/* 🛡️ Centered Unified Auth Card */}
+      {/* 🛡️ Option 1: Clean Minimalist Centered Card (Swiggy / Zomato Modern Style) */}
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
-        <div className="w-full max-w-4xl mx-auto rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-2xl shadow-[0_25px_80px_rgba(0,0,0,0.8)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-          
-          {/* Left Column: Visual Showcase Panel (5 of 12 cols, visible on desktop) */}
-          <div className="hidden lg:flex lg:col-span-5 relative flex-col justify-between p-8 overflow-hidden bg-gradient-to-br from-amber-950/40 via-slate-900/90 to-black/90 border-r border-white/10">
-            {/* Background culinary image with dark fade */}
-            <div className="absolute inset-0 z-0">
-              <img 
-                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop" 
-                alt="Culinary showcase" 
-                className="w-full h-full object-cover opacity-25 filter contrast-125"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/85" />
-            </div>
-
-            {/* Top Badge & Pitch */}
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold mb-6">
-                <Sparkles size={13} />
-                <span>Student & Foodie Hub</span>
-              </div>
-
-              <h2 className="text-2xl xl:text-3xl font-extrabold text-white leading-tight mb-3">
-                Good food for every study hour & craving.
-              </h2>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Connect your account to order fast meals, manage monthly tiffin plans, and unlock campus canteen discounts.
-              </p>
-            </div>
-
-            {/* Highlight Perks List */}
-            <div className="relative z-10 space-y-3.5 my-6">
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
-                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0">
-                  <Flame size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white">Daily Tiffin Subscriptions</h4>
-                  <p className="text-[11px] text-slate-400">Home-style hygienic meals on daily schedule</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
-                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0">
-                  <Clock3 size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white">20-Min Fast Campus Delivery</h4>
-                  <p className="text-[11px] text-slate-400">Direct to hostel drop-offs & doorstep</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
-                <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0">
-                  <ShieldCheck size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white">Verified Hygiene & Taste</h4>
-                  <p className="text-[11px] text-slate-400">Fresh ingredients & student-trusted kitchens</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Trust Stat */}
-            <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
-              <span className="flex items-center gap-1 font-bold text-amber-400">
-                ★ 4.9/5 Rating
-              </span>
-              <span className="text-slate-400 text-[11px]">
-                12,000+ orders served
-              </span>
-            </div>
-          </div>
-
-          {/* Right Column: Outlet Form (7 of 12 cols, full width on mobile) */}
-          <div className="col-span-1 lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-slate-900/40">
-            <AnimatePresence mode="wait">
-              <PageTransition key={location.pathname} className="w-full">
-                <Outlet />
-              </PageTransition>
-            </AnimatePresence>
-          </div>
-
+        <div className="w-full max-w-md mx-auto rounded-3xl border border-white/10 bg-[#0e1320]/90 backdrop-blur-2xl shadow-[0_20px_70px_rgba(0,0,0,0.8)] p-6 sm:p-9 relative z-10">
+          <AnimatePresence mode="wait">
+            <PageTransition key={location.pathname} className="w-full">
+              <Outlet />
+            </PageTransition>
+          </AnimatePresence>
         </div>
       </main>
 
